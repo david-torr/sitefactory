@@ -1,101 +1,370 @@
-import Image from "next/image";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import HeroHeader from "@/components/sections/HeroHeader";
+import ContentBlock from "@/components/sections/ContentBlock";
+import ObjectBlock from "@/components/sections/ObjectBlock";
+import StandardHeader from "@/components/sections/StandardHeader";
+import tokens from "@/tokens/tokens.json";
+
+// ─── Logos ────────────────────────────────────────────────────────────────────
+
+const HeaderLogo = (
+  <span
+    style={{
+      fontFamily: tokens.typography.fontFamily.sans,
+      fontSize: tokens.typography.fontSize["2xl"],
+      fontWeight: tokens.typography.fontWeight.bold,
+      letterSpacing: tokens.typography.letterSpacing.tight,
+      color: tokens.color.brand.primary,
+    }}
+  >
+    Forma
+  </span>
+);
+
+const FooterLogo = (
+  <span
+    style={{
+      fontFamily: tokens.typography.fontFamily.sans,
+      fontSize: tokens.typography.fontSize["2xl"],
+      fontWeight: tokens.typography.fontWeight.bold,
+      letterSpacing: tokens.typography.letterSpacing.tight,
+      color: tokens.color.neutral[100],
+    }}
+  >
+    Forma
+  </span>
+);
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <>
+      {/* ── 1. Header ──────────────────────────────────────────────────────── */}
+      <Header
+        logo={HeaderLogo}
+        navLinks={[
+          { label: "Solutions", href: "#solutions" },
+          { label: "Work", href: "#work" },
+          { label: "About", href: "#about" },
+          { label: "Blog", href: "#blog" },
+        ]}
+        ctaLabel="Get started"
+        ctaHref="#contact"
+      />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+      <main>
+        {/* ── 2. HeroHeader ────────────────────────────────────────────────── */}
+        <HeroHeader
+          name="home-hero"
+          carouselSpeed={5000}
+          contentAlignment="left"
+          verticalAlignment="middle"
+          linkBarVisible={true}
+          linkBarBgColour={tokens.color.neutral[100]}
+          heroItems={[
+            {
+              name: "slide-design",
+              title: "Design beyond expectation.",
+              subtitle:
+                "We partner with ambitious brands to create digital experiences that define categories and move markets.",
+              button1Label: "See our work",
+              button1Link: { label: "See our work", url: "#work" },
+              button2Label: "Talk to us",
+              button2Link: { label: "Talk to us", url: "#contact", openInNewTab: false },
+              theme: "dark",
+              bgColour: tokens.color.neutral[900],
+              contentAlignment: "left",
+            },
+            {
+              name: "slide-engineering",
+              title: "Built for performance at scale.",
+              subtitle:
+                "From early-stage startups to global enterprises, we bring precision engineering to every product we ship.",
+              button1Label: "Our approach",
+              button1Link: { label: "Our approach", url: "#about" },
+              theme: "dark",
+              bgColour: tokens.color.neutral[800],
+              contentAlignment: "left",
+            },
+            {
+              name: "slide-strategy",
+              title: "Where craft meets strategy.",
+              subtitle:
+                "The best products live at the intersection of beautiful design and rigorous, evidence-based thinking.",
+              button1Label: "Start a project",
+              button1Link: { label: "Start a project", url: "#contact" },
+              button2Label: "View case studies",
+              button2Link: { label: "View case studies", url: "#work" },
+              theme: "dark",
+              bgColour: "#1a1a1a",
+              contentAlignment: "left",
+            },
+          ]}
+          linkBarItems={[
+            {
+              title: "Brand Identity",
+              subtitle: "Positioning, identity & design systems",
+            },
+            {
+              title: "Web & Product",
+              subtitle: "Next.js, React & mobile applications",
+            },
+            {
+              title: "Growth Strategy",
+              subtitle: "Analytics, SEO & performance marketing",
+            },
+          ]}
+        />
+
+        {/* ── 3. ContentBlock — Selected work ──────────────────────────────── */}
+        <section id="work">
+          <ContentBlock
+            name="selected-work"
+            title="Selected work"
+            subtitle="Recent projects across brand, digital, and product strategy."
+            titleAlignment="left"
+            backgroundColour={tokens.color.neutral[50]}
+            theme="light"
+            style="card"
+            layout="grid"
+            columns={3}
+            link={{ label: "View all projects", url: "#", openInNewTab: false }}
+            items={[
+              {
+                name: "apex-rebrand",
+                title: "Apex Financial — Brand Overhaul",
+                blurb:
+                  "Complete brand refresh for a Series B fintech: new identity, design system, and marketing site that drove a 40% increase in enterprise sign-ups.",
+                image: {
+                  url: "https://picsum.photos/seed/apex-fin/800/520",
+                  alternativeText: "Apex Financial brand project",
+                },
+                alignment: "left",
+                primaryLink: { label: "View case study", url: "#" },
+              },
+              {
+                name: "orbit-platform",
+                title: "Orbit — Logistics Platform",
+                blurb:
+                  "End-to-end design and engineering for a real-time logistics dashboard serving 200+ fleet operators across Europe.",
+                image: {
+                  url: "https://picsum.photos/seed/orbit-log/800/520",
+                  alternativeText: "Orbit logistics platform",
+                },
+                alignment: "left",
+                primaryLink: { label: "View case study", url: "#" },
+              },
+              {
+                name: "vessel-studio",
+                title: "Vessel — Luxury E-commerce",
+                blurb:
+                  "Custom Shopify storefront and editorial content strategy for a premium homewares brand entering the US market.",
+                image: {
+                  url: "https://picsum.photos/seed/vessel-lux/800/520",
+                  alternativeText: "Vessel Studio e-commerce",
+                },
+                alignment: "left",
+                primaryLink: { label: "View case study", url: "#" },
+              },
+            ]}
+          />
+        </section>
+
+        {/* ── 4. ObjectBlock — Services ─────────────────────────────────────── */}
+        <section id="solutions">
+          <ObjectBlock
+            name="services"
+            title="What we do"
+            subtitle="End-to-end capabilities across the full digital product lifecycle."
+            titleAlignment="center"
+            theme="dark"
+            backgroundColour={tokens.color.neutral[900]}
+            columns={3}
+            layout="grid"
+            items={[
+              {
+                name: "brand-strategy",
+                title: "Brand Strategy",
+                blurb:
+                  "Define your market position, tone of voice, and visual identity with a cohesive brand system built to scale.",
+              },
+              {
+                name: "product-design",
+                title: "Product Design",
+                blurb:
+                  "User research, interaction design, prototyping, and design systems that put people at the centre of every decision.",
+              },
+              {
+                name: "web-development",
+                title: "Web Development",
+                blurb:
+                  "High-performance Next.js applications with clean architecture, accessibility built in, and optimised for Core Web Vitals.",
+              },
+              {
+                name: "content-strategy",
+                title: "Content Strategy",
+                blurb:
+                  "Purposeful content frameworks that attract the right audience, communicate your value, and drive meaningful action.",
+              },
+              {
+                name: "growth-marketing",
+                title: "Growth Marketing",
+                blurb:
+                  "Data-driven acquisition and retention programmes across paid, organic, and lifecycle channels.",
+              },
+              {
+                name: "analytics",
+                title: "Analytics & Insights",
+                blurb:
+                  "Measurement infrastructure, dashboards, and regular reporting so you always know what's working and why.",
+              },
+            ]}
+          />
+        </section>
+
+        {/* ── 5. ContentBlock — Alternating feature detail ─────────────────── */}
+        <ContentBlock
+          name="feature-detail"
+          title="How we work"
+          subtitle="A clear, collaborative process designed to move fast without cutting corners."
+          titleAlignment="left"
+          backgroundColour={tokens.color.brand.secondary}
+          theme="light"
+          style="card"
+          layout="alternating"
+          columns={1}
+          items={[
+            {
+              name: "discovery",
+              title: "01 — Discovery & Strategy",
+              blurb:
+                "Every engagement starts with deep listening. We run structured discovery workshops to understand your business goals, user needs, and competitive landscape before a single pixel is designed.",
+              image: {
+                url: "https://picsum.photos/seed/discovery-ws/900/600",
+                alternativeText: "Discovery workshop session",
+              },
+              alignment: "left",
+            },
+            {
+              name: "design-build",
+              title: "02 — Design & Build",
+              blurb:
+                "We move from strategy to execution in tight, iterative cycles. Weekly reviews keep stakeholders aligned, and our shared Figma workspace gives you full visibility at every stage.",
+              image: {
+                url: "https://picsum.photos/seed/design-build/900/600",
+                alternativeText: "Design and build process",
+              },
+              alignment: "left",
+            },
+            {
+              name: "launch-grow",
+              title: "03 — Launch & Grow",
+              blurb:
+                "We don't disappear at go-live. Post-launch, we monitor performance, run experiments, and provide ongoing design and engineering support to keep your product improving.",
+              image: {
+                url: "https://picsum.photos/seed/launch-grow/900/600",
+                alternativeText: "Launch and growth phase",
+              },
+              alignment: "left",
+            },
+          ]}
+        />
+
+        {/* ── 5. StandardHeader — About section intro ───────────────────────── */}
+        <section id="about">
+          <StandardHeader
+            name="about-header"
+            theme="dark"
+            backgroundType="colour"
+            bgColour={tokens.color.neutral[900]}
+            title="We are Forma."
+            subtitle="A specialist team of designers, engineers, and strategists who care deeply about craft, quality, and the long-term success of the brands we work with. Based in London. Working globally since 2019."
+            contentAlignment="center"
+          />
+        </section>
+
+        {/* ── ObjectBlock — Team values carousel ────────────────────────────── */}
+        <ObjectBlock
+          name="team-values"
+          title="Our principles"
+          subtitle="The values that shape how we think, work, and show up for our clients every day."
+          titleAlignment="center"
+          backgroundColour={tokens.color.neutral[50]}
+          theme="light"
+          columns={2}
+          layout="carousel"
+          carouselInterval={4500}
+          items={[
+            {
+              name: "craft",
+              title: "Relentless craft",
+              blurb:
+                "We sweat the details that most people never notice — because we believe the aggregate of small, right decisions is what separates good work from great work.",
+            },
+            {
+              name: "clarity",
+              title: "Radical clarity",
+              blurb:
+                "Complexity is the enemy of progress. We communicate clearly, set honest expectations, and push back when scope threatens quality.",
+            },
+            {
+              name: "ownership",
+              title: "Full ownership",
+              blurb:
+                "We treat your project as if it were our own business. That means proactive problem-solving, not waiting to be asked.",
+            },
+            {
+              name: "partnership",
+              title: "Genuine partnership",
+              blurb:
+                "The best outcomes come from real collaboration. We work alongside your team, not as a vendor, but as a committed long-term partner.",
+            },
+          ]}
+        />
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+      {/* ── 6. Footer ──────────────────────────────────────────────────────── */}
+      <Footer
+        logo={FooterLogo}
+        tagline="Building what's next for ambitious brands."
+        copyrightName="Forma Studio Ltd"
+        linkGroups={[
+          {
+            heading: "Work",
+            links: [
+              { label: "Case Studies", href: "#work" },
+              { label: "Our Process", href: "#about" },
+              { label: "Results", href: "#" },
+              { label: "Testimonials", href: "#" },
+            ],
+          },
+          {
+            heading: "Studio",
+            links: [
+              { label: "About", href: "#about" },
+              { label: "Team", href: "#" },
+              { label: "Careers", href: "#" },
+              { label: "Press", href: "#" },
+            ],
+          },
+          {
+            heading: "Connect",
+            links: [
+              { label: "Blog", href: "#" },
+              { label: "Newsletter", href: "#" },
+              { label: "Contact", href: "#contact" },
+              { label: "LinkedIn", href: "#" },
+            ],
+          },
+        ]}
+        legalLinks={[
+          { label: "Privacy Policy", href: "#" },
+          { label: "Terms of Service", href: "#" },
+          { label: "Cookies", href: "#" },
+        ]}
+      />
+    </>
   );
 }
