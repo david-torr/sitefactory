@@ -495,7 +495,7 @@ export default function ContentBlock({
     // List
     if (style === "list") {
       return (
-        <div className="flex flex-col divide-y" style={{ divideColor: isDark ? tokens.color.neutral[700] : tokens.color.neutral[200] }}>
+        <div className={`flex flex-col divide-y ${isDark ? "divide-neutral-700" : "divide-neutral-200"}`}>
           {items.map((item) => (
             <ContentItemRow key={item.name} item={item} blockTheme={theme} />
           ))}

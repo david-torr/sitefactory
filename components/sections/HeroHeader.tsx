@@ -273,7 +273,7 @@ function LinkBar({ items, bgColour }: LinkBarProps) {
       className="border-t"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ul className="flex flex-wrap divide-x" style={{ divideColor: tokens.color.neutral[200] }}>
+        <ul className="flex flex-wrap divide-x divide-neutral-200">
           {items.map((item, i) => (
             <li key={i} className="flex-1 min-w-[160px]">
               <a
