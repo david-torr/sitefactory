@@ -3,7 +3,6 @@ import Footer from "@/components/layout/Footer";
 import HeroHeader from "@/components/sections/HeroHeader";
 import ContentBlock from "@/components/sections/ContentBlock";
 import ObjectBlock from "@/components/sections/ObjectBlock";
-import StandardHeader from "@/components/sections/StandardHeader";
 import tokens from "@/tokens/tokens.json";
 
 // ─── Logos ────────────────────────────────────────────────────────────────────
@@ -41,7 +40,7 @@ const FooterLogo = (
 export default function Home() {
   return (
     <>
-      {/* ── 1. Header ──────────────────────────────────────────────────────── */}
+      {/* 1. Header */}
       <Header
         logo={HeaderLogo}
         navLinks={[
@@ -55,7 +54,7 @@ export default function Home() {
       />
 
       <main>
-        {/* ── 2. HeroHeader ────────────────────────────────────────────────── */}
+        {/* 2. HeroHeader */}
         <HeroHeader
           name="home-hero"
           carouselSpeed={5000}
@@ -72,7 +71,7 @@ export default function Home() {
               button1Label: "See our work",
               button1Link: { label: "See our work", url: "#work" },
               button2Label: "Talk to us",
-              button2Link: { label: "Talk to us", url: "#contact", openInNewTab: false },
+              button2Link: { label: "Talk to us", url: "#contact" },
               theme: "dark",
               bgColour: tokens.color.neutral[900],
               contentAlignment: "left",
@@ -118,7 +117,7 @@ export default function Home() {
           ]}
         />
 
-        {/* ── 3. ContentBlock — Selected work ──────────────────────────────── */}
+        {/* 3. ContentBlock — Selected work */}
         <section id="work">
           <ContentBlock
             name="selected-work"
@@ -130,7 +129,7 @@ export default function Home() {
             style="card"
             layout="grid"
             columns={3}
-            link={{ label: "View all projects", url: "#", openInNewTab: false }}
+            link={{ label: "View all projects", url: "#" }}
             items={[
               {
                 name: "apex-rebrand",
@@ -172,7 +171,7 @@ export default function Home() {
           />
         </section>
 
-        {/* ── 4. ObjectBlock — Services ─────────────────────────────────────── */}
+        {/* 4. ObjectBlock — Services */}
         <section id="solutions">
           <ObjectBlock
             name="services"
@@ -223,109 +222,9 @@ export default function Home() {
             ]}
           />
         </section>
-
-        {/* ── 5. ContentBlock — Alternating feature detail ─────────────────── */}
-        <ContentBlock
-          name="feature-detail"
-          title="How we work"
-          subtitle="A clear, collaborative process designed to move fast without cutting corners."
-          titleAlignment="left"
-          backgroundColour={tokens.color.brand.secondary}
-          theme="light"
-          style="card"
-          layout="alternating"
-          columns={1}
-          items={[
-            {
-              name: "discovery",
-              title: "01 — Discovery & Strategy",
-              blurb:
-                "Every engagement starts with deep listening. We run structured discovery workshops to understand your business goals, user needs, and competitive landscape before a single pixel is designed.",
-              image: {
-                url: "https://picsum.photos/seed/discovery-ws/900/600",
-                alternativeText: "Discovery workshop session",
-              },
-              alignment: "left",
-            },
-            {
-              name: "design-build",
-              title: "02 — Design & Build",
-              blurb:
-                "We move from strategy to execution in tight, iterative cycles. Weekly reviews keep stakeholders aligned, and our shared Figma workspace gives you full visibility at every stage.",
-              image: {
-                url: "https://picsum.photos/seed/design-build/900/600",
-                alternativeText: "Design and build process",
-              },
-              alignment: "left",
-            },
-            {
-              name: "launch-grow",
-              title: "03 — Launch & Grow",
-              blurb:
-                "We don't disappear at go-live. Post-launch, we monitor performance, run experiments, and provide ongoing design and engineering support to keep your product improving.",
-              image: {
-                url: "https://picsum.photos/seed/launch-grow/900/600",
-                alternativeText: "Launch and growth phase",
-              },
-              alignment: "left",
-            },
-          ]}
-        />
-
-        {/* ── 5. StandardHeader — About section intro ───────────────────────── */}
-        <section id="about">
-          <StandardHeader
-            name="about-header"
-            theme="dark"
-            backgroundType="colour"
-            bgColour={tokens.color.neutral[900]}
-            title="We are Forma."
-            subtitle="A specialist team of designers, engineers, and strategists who care deeply about craft, quality, and the long-term success of the brands we work with. Based in London. Working globally since 2019."
-            contentAlignment="center"
-          />
-        </section>
-
-        {/* ── ObjectBlock — Team values carousel ────────────────────────────── */}
-        <ObjectBlock
-          name="team-values"
-          title="Our principles"
-          subtitle="The values that shape how we think, work, and show up for our clients every day."
-          titleAlignment="center"
-          backgroundColour={tokens.color.neutral[50]}
-          theme="light"
-          columns={2}
-          layout="carousel"
-          carouselInterval={4500}
-          items={[
-            {
-              name: "craft",
-              title: "Relentless craft",
-              blurb:
-                "We sweat the details that most people never notice — because we believe the aggregate of small, right decisions is what separates good work from great work.",
-            },
-            {
-              name: "clarity",
-              title: "Radical clarity",
-              blurb:
-                "Complexity is the enemy of progress. We communicate clearly, set honest expectations, and push back when scope threatens quality.",
-            },
-            {
-              name: "ownership",
-              title: "Full ownership",
-              blurb:
-                "We treat your project as if it were our own business. That means proactive problem-solving, not waiting to be asked.",
-            },
-            {
-              name: "partnership",
-              title: "Genuine partnership",
-              blurb:
-                "The best outcomes come from real collaboration. We work alongside your team, not as a vendor, but as a committed long-term partner.",
-            },
-          ]}
-        />
       </main>
 
-      {/* ── 6. Footer ──────────────────────────────────────────────────────── */}
+      {/* 5. Footer */}
       <Footer
         logo={FooterLogo}
         tagline="Building what's next for ambitious brands."
