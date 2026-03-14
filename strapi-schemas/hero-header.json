@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "hero_headers",
+  "info": {
+    "singularName": "hero-header",
+    "pluralName": "hero-headers",
+    "displayName": "Hero Header",
+    "description": "Full-bleed carousel/hero page component. Overlaid by Site Nav when displayMode = overlay."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "carouselSpeed": {
+      "type": "integer",
+      "default": 5000,
+      "min": 0
+    },
+    "contentAlignment": {
+      "type": "enumeration",
+      "enum": ["left", "center", "right"],
+      "default": "left"
+    },
+    "verticalAlignment": {
+      "type": "enumeration",
+      "enum": ["top", "middle", "bottom"],
+      "default": "middle"
+    },
+    "linkBarVisible": {
+      "type": "boolean",
+      "default": false
+    },
+    "linkBarBgColour": {
+      "type": "string"
+    },
+    "heroItems": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::hero-slide.hero-slide"
+    },
+    "linkBarItems": {
+      "type": "component",
+      "repeatable": true,
+      "component": "hero.link-bar-item"
+    }
+  }
+}

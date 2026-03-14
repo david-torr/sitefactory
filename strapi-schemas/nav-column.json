@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nav_columns",
+  "info": {
+    "singularName": "nav-column",
+    "pluralName": "nav-columns",
+    "displayName": "Nav Column",
+    "description": "A labelled column of links used in the Site Footer navigation area."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "links": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::link.link"
+    }
+  }
+}

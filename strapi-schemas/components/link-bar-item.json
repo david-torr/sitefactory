@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_hero_link_bar_items",
+  "info": {
+    "displayName": "Link Bar Item",
+    "icon": "link",
+    "description": "Inline component used inside Hero Header's link bar. Not a standalone collection type."
+  },
+  "options": {},
+  "attributes": {
+    "icon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "files"]
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "link": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::link.link"
+    }
+  }
+}

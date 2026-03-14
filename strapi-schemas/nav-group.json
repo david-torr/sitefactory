@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nav_groups",
+  "info": {
+    "singularName": "nav-group",
+    "pluralName": "nav-groups",
+    "displayName": "Nav Group",
+    "description": "A dropdown navigation group with a parent label/link and multiple Nav Link children."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "parentLabel": {
+      "type": "string",
+      "required": true
+    },
+    "parentLink": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::link.link"
+    },
+    "children": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::nav-link.nav-link"
+    }
+  }
+}

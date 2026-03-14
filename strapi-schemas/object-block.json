@@ -1,0 +1,70 @@
+{
+  "kind": "collectionType",
+  "collectionName": "object_blocks",
+  "info": {
+    "singularName": "object-block",
+    "pluralName": "object-blocks",
+    "displayName": "Object Block",
+    "description": "Grid/carousel block for icon-driven object items (features, services, team members, etc.)."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "text"
+    },
+    "titleAlignment": {
+      "type": "enumeration",
+      "enum": ["left", "center", "right"],
+      "default": "left"
+    },
+    "backgroundColour": {
+      "type": "string"
+    },
+    "backgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "theme": {
+      "type": "enumeration",
+      "enum": ["light", "dark"],
+      "default": "light"
+    },
+    "columns": {
+      "type": "integer",
+      "default": 3,
+      "min": 1,
+      "max": 6
+    },
+    "layout": {
+      "type": "enumeration",
+      "enum": ["grid", "alternating", "carousel"],
+      "default": "grid"
+    },
+    "carouselInterval": {
+      "type": "integer",
+      "default": 4000,
+      "min": 0
+    },
+    "link": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::link.link"
+    },
+    "items": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::object-item.object-item"
+    }
+  }
+}

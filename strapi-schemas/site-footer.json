@@ -1,0 +1,41 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_footer",
+  "info": {
+    "singularName": "site-footer",
+    "pluralName": "site-footers",
+    "displayName": "Site Footer",
+    "description": "Global footer singleton. One per site."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "files", "videos"]
+    },
+    "copyrightText": {
+      "type": "string"
+    },
+    "acknowledgementOfCountry": {
+      "type": "text"
+    },
+    "navigationColumns": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::nav-column.nav-column"
+    },
+    "legalLinks": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::link.link"
+    }
+  }
+}

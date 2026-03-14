@@ -1,0 +1,69 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_nav",
+  "info": {
+    "singularName": "site-nav",
+    "pluralName": "site-navs",
+    "displayName": "Site Nav",
+    "description": "Global navigation singleton. One per site."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "logoDefault": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images", "files", "videos"]
+    },
+    "logoScrolled": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "files", "videos"]
+    },
+    "siteName": {
+      "type": "string"
+    },
+    "displayMode": {
+      "type": "enumeration",
+      "enum": ["standard", "overlay"],
+      "default": "standard"
+    },
+    "theme": {
+      "type": "enumeration",
+      "enum": ["light", "dark"],
+      "default": "light"
+    },
+    "backgroundColor": {
+      "type": "string"
+    },
+    "scrollBehaviour": {
+      "type": "enumeration",
+      "enum": ["static", "sticky", "fixed"],
+      "default": "sticky"
+    },
+    "scrolledBgColour": {
+      "type": "string"
+    },
+    "scrolledTheme": {
+      "type": "enumeration",
+      "enum": ["light", "dark"],
+      "default": "light"
+    },
+    "navItems": {
+      "type": "dynamiczone",
+      "components": ["nav.nav-link", "nav.nav-group"]
+    },
+    "ctaButtonLink": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::link.link"
+    }
+  }
+}

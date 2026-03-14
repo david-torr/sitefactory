@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "standard_headers",
+  "info": {
+    "singularName": "standard-header",
+    "pluralName": "standard-headers",
+    "displayName": "Standard Header",
+    "description": "Simple page header with title, subtitle and background. Self-contained — no external references."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "theme": {
+      "type": "enumeration",
+      "enum": ["light", "dark"],
+      "default": "light"
+    },
+    "backgroundType": {
+      "type": "enumeration",
+      "enum": ["colour", "image"],
+      "default": "colour"
+    },
+    "bgColour": {
+      "type": "string"
+    },
+    "bgImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "text"
+    },
+    "contentAlignment": {
+      "type": "enumeration",
+      "enum": ["left", "center", "right"],
+      "default": "left"
+    }
+  }
+}
