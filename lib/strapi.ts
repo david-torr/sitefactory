@@ -52,19 +52,19 @@ function unwrapVideo(data: any): StrapiVideo | undefined {
 // ─── Single type fetchers ─────────────────────────────────────────────────────
 
 export async function getSiteNav() {
-  const res = await fetchStrapi<any>("site-nav?populate=deep");
+  const res = await fetchStrapi<any>("site-nav?populate[navItems][populate]=*&populate[ctaButtonLink]=*");
   return res?.data?.attributes ?? null;
 }
 
 export async function getSiteFooter() {
-  const res = await fetchStrapi<any>("site-footer?populate=deep");
+  const res = await fetchStrapi<any>("site-footer?populate[logo]=*&populate[navigationColumns][populate][links]=*&populate[legalLinks]=*");
   return res?.data?.attributes ?? null;
 }
 
 // ─── Collection type fetchers ─────────────────────────────────────────────────
 
 export async function getHeroHeaders(): Promise<HeroHeaderProps[]> {
-  const res = await fetchStrapi<any>("hero-headers?populate=deep");
+  const res = await fetchStrapi<any>("hero-headers?populate[heroItems][populate]=*&populate[linkBarItems]=*");
   if (!res?.data?.length) return [];
 
   return res.data.map((item: any): HeroHeaderProps => {
@@ -106,7 +106,7 @@ export async function getHeroHeaders(): Promise<HeroHeaderProps[]> {
 }
 
 export async function getContentBlocks(): Promise<ContentBlockProps[]> {
-  const res = await fetchStrapi<any>("content-blocks?populate=deep");
+  const res = await fetchStrapi<any>("content-blocks?populate[backgroundImage]=*&populate[link]=*&populate[items][populate]=*");
   if (!res?.data?.length) return [];
 
   return res.data.map((item: any): ContentBlockProps => {
@@ -144,7 +144,7 @@ export async function getContentBlocks(): Promise<ContentBlockProps[]> {
 }
 
 export async function getObjectBlocks(): Promise<ObjectBlockProps[]> {
-  const res = await fetchStrapi<any>("object-blocks?populate=deep");
+  const res = await fetchStrapi<any>("object-blocks?populate[backgroundImage]=*&populate[link]=*&populate[items][populate]=*");
   if (!res?.data?.length) return [];
 
   return res.data.map((item: any): ObjectBlockProps => {
@@ -178,7 +178,7 @@ export async function getObjectBlocks(): Promise<ObjectBlockProps[]> {
 }
 
 export async function getStandardHeaders(): Promise<StandardHeaderProps[]> {
-  const res = await fetchStrapi<any>("standard-headers?populate=deep");
+  const res = await fetchStrapi<any>("standard-headers?populate[bgImage]=*");
   if (!res?.data?.length) return [];
 
   return res.data.map((item: any): StandardHeaderProps => {
