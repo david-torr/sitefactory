@@ -3,7 +3,6 @@ import Footer from "@/components/layout/Footer";
 import HeroHeader from "@/components/sections/HeroHeader";
 import ContentBlock from "@/components/sections/ContentBlock";
 import ObjectBlock from "@/components/sections/ObjectBlock";
-import tokens from "@/tokens/tokens.json";
 import { getHeroHeaders, getContentBlocks, getObjectBlocks } from "@/lib/strapi";
 import type { HeroHeaderProps } from "@/components/sections/HeroHeader";
 import type { ContentBlockProps } from "@/components/sections/ContentBlock";
@@ -12,29 +11,13 @@ import type { ObjectBlockProps } from "@/components/sections/ObjectBlock";
 // ─── Logos ────────────────────────────────────────────────────────────────────
 
 const HeaderLogo = (
-  <span
-    style={{
-      fontFamily: tokens.typography.fontFamily.sans,
-      fontSize: tokens.typography.fontSize["2xl"],
-      fontWeight: tokens.typography.fontWeight.bold,
-      letterSpacing: tokens.typography.letterSpacing.tight,
-      color: tokens.color.brand.primary,
-    }}
-  >
+  <span className="font-body text-2xl font-bold tracking-tight text-primary">
     Forma
   </span>
 );
 
 const FooterLogo = (
-  <span
-    style={{
-      fontFamily: tokens.typography.fontFamily.sans,
-      fontSize: tokens.typography.fontSize["2xl"],
-      fontWeight: tokens.typography.fontWeight.bold,
-      letterSpacing: tokens.typography.letterSpacing.tight,
-      color: tokens.color.neutral[100],
-    }}
-  >
+  <span className="font-body text-2xl font-bold tracking-tight text-neutral-100">
     Forma
   </span>
 );
@@ -47,7 +30,7 @@ const fallbackHero: HeroHeaderProps = {
   contentAlignment: "left",
   verticalAlignment: "middle",
   linkBarVisible: true,
-  linkBarBgColour: tokens.color.neutral[100],
+  linkBarBgColour: "#f5f5f5",
   heroItems: [
     {
       name: "slide-design",
@@ -59,7 +42,7 @@ const fallbackHero: HeroHeaderProps = {
       button2Label: "Talk to us",
       button2Link: { label: "Talk to us", url: "#contact" },
       theme: "dark",
-      bgColour: tokens.color.neutral[900],
+      bgColour: "#171717",
       contentAlignment: "left",
     },
     {
@@ -70,7 +53,7 @@ const fallbackHero: HeroHeaderProps = {
       button1Label: "Our approach",
       button1Link: { label: "Our approach", url: "#about" },
       theme: "dark",
-      bgColour: tokens.color.neutral[800],
+      bgColour: "#262626",
       contentAlignment: "left",
     },
     {
@@ -99,7 +82,7 @@ const fallbackContentBlock: ContentBlockProps = {
   title: "Selected work",
   subtitle: "Recent projects across brand, digital, and product strategy.",
   titleAlignment: "left",
-  backgroundColour: tokens.color.neutral[50],
+  backgroundColour: "#fafafa",
   theme: "light",
   style: "card",
   layout: "grid",
@@ -151,7 +134,7 @@ const fallbackObjectBlock: ObjectBlockProps = {
   subtitle: "End-to-end capabilities across the full digital product lifecycle.",
   titleAlignment: "center",
   theme: "dark",
-  backgroundColour: tokens.color.neutral[900],
+  backgroundColour: "#171717",
   columns: 3,
   layout: "grid",
   items: [
