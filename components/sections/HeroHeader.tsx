@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import tokens from "@/tokens/tokens.json";
 import type { StrapiMedia, StrapiLink, StrapiVideo } from "./types";
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
@@ -58,37 +57,19 @@ const verticalJustifyClass: Record<string, string> = {
 function HeroHeaderSkeleton() {
   return (
     <div
-      className="relative w-full animate-pulse overflow-hidden"
-      style={{
-        height: "600px",
-        backgroundColor: tokens.color.neutral[200],
-      }}
+      className="relative w-full animate-pulse overflow-hidden bg-neutral-200"
+      style={{ height: "600px" }}
       aria-busy="true"
       aria-label="Loading hero header"
     >
       <div className="flex h-full flex-col justify-center px-6 sm:px-10 md:px-16 lg:px-24">
         <div className="flex max-w-2xl flex-col gap-5">
-          <div
-            className="h-12 w-3/4 rounded-md"
-            style={{ backgroundColor: tokens.color.neutral[300] }}
-          />
-          <div
-            className="h-6 w-full rounded"
-            style={{ backgroundColor: tokens.color.neutral[300] }}
-          />
-          <div
-            className="h-6 w-2/3 rounded"
-            style={{ backgroundColor: tokens.color.neutral[300] }}
-          />
+          <div className="h-12 w-3/4 rounded-md bg-neutral-300" />
+          <div className="h-6 w-full rounded bg-neutral-300" />
+          <div className="h-6 w-2/3 rounded bg-neutral-300" />
           <div className="flex gap-3 pt-2">
-            <div
-              className="h-12 w-36 rounded-md"
-              style={{ backgroundColor: tokens.color.neutral[300] }}
-            />
-            <div
-              className="h-12 w-36 rounded-md"
-              style={{ backgroundColor: tokens.color.neutral[300] }}
-            />
+            <div className="h-12 w-36 rounded-md bg-neutral-300" />
+            <div className="h-12 w-36 rounded-md bg-neutral-300" />
           </div>
         </div>
       </div>
@@ -109,24 +90,25 @@ function Slide({ slide, defaultAlignment, defaultVertical }: SlideProps) {
   const isDark = (slide.theme ?? "light") === "dark";
   const hasMedia = !!(slide.bgImage?.url || slide.backgroundVideo?.url);
 
-  const titleColor = isDark
-    ? tokens.color.neutral[100]
+  // Derive text colour classes from theme + media context
+  const titleClass = isDark
+    ? "text-neutral-100"
     : hasMedia
-    ? "#ffffff"
-    : tokens.color.neutral[900];
-  const subtitleColor = isDark
-    ? tokens.color.neutral[300]
+    ? "text-white"
+    : "text-primary";
+  const subtitleClass = isDark
+    ? "text-neutral-300"
     : hasMedia
-    ? "rgba(255,255,255,0.88)"
-    : tokens.color.neutral[600];
+    ? "text-white/90"
+    : "text-neutral-600";
 
   const videoSrc =
     slide.backgroundVideo?.file?.url ?? slide.backgroundVideo?.url;
 
   return (
     <div
-      className="relative h-full w-full overflow-hidden"
-      style={{ backgroundColor: slide.bgColour ?? tokens.color.neutral[800] }}
+      className="relative h-full w-full overflow-hidden bg-primary"
+      style={slide.bgColour ? { backgroundColor: slide.bgColour } : undefined}
     >
       {/* Background image */}
       {slide.bgImage?.url && (
@@ -168,19 +150,11 @@ function Slide({ slide, defaultAlignment, defaultVertical }: SlideProps) {
         className={`relative flex h-full flex-col px-6 sm:px-10 md:px-16 lg:px-24 ${verticalJustifyClass[defaultVertical]}`}
       >
         <div
-          className={`flex max-w-3xl flex-col gap-5 ${alignItemsClass[alignment]}`}
-          style={{ fontFamily: tokens.typography.fontFamily.sans }}
+          className={`flex max-w-3xl flex-col gap-5 font-body ${alignItemsClass[alignment]}`}
         >
           {slide.title && (
             <h1
-              className="sm:text-6xl"
-              style={{
-                color: titleColor,
-                fontSize: tokens.typography.fontSize["5xl"],
-                fontWeight: tokens.typography.fontWeight.bold,
-                lineHeight: tokens.typography.lineHeight.tight,
-                letterSpacing: tokens.typography.letterSpacing.tight,
-              }}
+              className={`font-display text-5xl font-bold leading-tight tracking-tight sm:text-6xl ${titleClass}`}
             >
               {slide.title}
             </h1>
@@ -188,13 +162,8 @@ function Slide({ slide, defaultAlignment, defaultVertical }: SlideProps) {
 
           {slide.subtitle && (
             <p
-              className="sm:text-xl"
-              style={{
-                color: subtitleColor,
-                fontSize: tokens.typography.fontSize.lg,
-                lineHeight: tokens.typography.lineHeight.relaxed,
-                maxWidth: "36rem",
-              }}
+              className={`font-body text-lg leading-relaxed sm:text-xl ${subtitleClass}`}
+              style={{ maxWidth: "36rem" }}
             >
               {slide.subtitle}
             </p>
@@ -205,21 +174,15 @@ function Slide({ slide, defaultAlignment, defaultVertical }: SlideProps) {
               {slide.button1Label && (
                 <a
                   href={slide.button1Link?.url ?? "#"}
-                  target={slide.button1Link?.openInNewTab ? "_blank" : undefined}
+                  target={
+                    slide.button1Link?.openInNewTab ? "_blank" : undefined
+                  }
                   rel={
                     slide.button1Link?.openInNewTab
                       ? "noopener noreferrer"
                       : undefined
                   }
-                  style={{
-                    backgroundColor: tokens.color.brand.secondary,
-                    color: tokens.color.brand.primary,
-                    fontWeight: tokens.typography.fontWeight.semibold,
-                    fontSize: tokens.typography.fontSize.sm,
-                    borderRadius: tokens.borderRadius.md,
-                    letterSpacing: tokens.typography.letterSpacing.wide,
-                  }}
-                  className="inline-flex items-center px-7 py-3.5 transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="inline-flex items-center rounded-md bg-accent px-7 py-3.5 text-sm font-semibold tracking-wide text-white transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   {slide.button1Label}
                 </a>
@@ -228,21 +191,15 @@ function Slide({ slide, defaultAlignment, defaultVertical }: SlideProps) {
               {slide.button2Label && (
                 <a
                   href={slide.button2Link?.url ?? "#"}
-                  target={slide.button2Link?.openInNewTab ? "_blank" : undefined}
+                  target={
+                    slide.button2Link?.openInNewTab ? "_blank" : undefined
+                  }
                   rel={
                     slide.button2Link?.openInNewTab
                       ? "noopener noreferrer"
                       : undefined
                   }
-                  style={{
-                    border: "2px solid rgba(255,255,255,0.75)",
-                    color: "#ffffff",
-                    fontWeight: tokens.typography.fontWeight.semibold,
-                    fontSize: tokens.typography.fontSize.sm,
-                    borderRadius: tokens.borderRadius.md,
-                    letterSpacing: tokens.typography.letterSpacing.wide,
-                  }}
-                  className="inline-flex items-center px-7 py-3.5 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="inline-flex items-center rounded-md border-2 border-white/75 px-7 py-3.5 text-sm font-semibold tracking-wide text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   {slide.button2Label}
                 </a>
@@ -265,12 +222,8 @@ interface LinkBarProps {
 function LinkBar({ items, bgColour }: LinkBarProps) {
   return (
     <div
-      style={{
-        backgroundColor: bgColour ?? tokens.color.neutral[100],
-        borderTopColor: tokens.color.neutral[200],
-        fontFamily: tokens.typography.fontFamily.sans,
-      }}
-      className="border-t"
+      className="border-t border-neutral-200 bg-neutral-100 font-body"
+      style={bgColour ? { backgroundColor: bgColour } : undefined}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ul className="flex flex-wrap divide-x divide-neutral-200">
@@ -279,9 +232,10 @@ function LinkBar({ items, bgColour }: LinkBarProps) {
               <a
                 href={item.link?.url ?? "#"}
                 target={item.link?.openInNewTab ? "_blank" : undefined}
-                rel={item.link?.openInNewTab ? "noopener noreferrer" : undefined}
+                rel={
+                  item.link?.openInNewTab ? "noopener noreferrer" : undefined
+                }
                 className="flex items-center gap-3 px-5 py-4 transition-colors hover:bg-black/5"
-                style={{ borderRightColor: tokens.color.neutral[200] }}
               >
                 {item.icon?.url && (
                   <img
@@ -293,25 +247,14 @@ function LinkBar({ items, bgColour }: LinkBarProps) {
                 )}
                 <div className="min-w-0">
                   {item.title && (
-                    <p
-                      className="truncate"
-                      style={{
-                        fontWeight: tokens.typography.fontWeight.semibold,
-                        fontSize: tokens.typography.fontSize.sm,
-                        color: tokens.color.neutral[800],
-                      }}
-                    >
+                    <p className="truncate text-sm font-semibold text-neutral-800">
                       {item.title}
                     </p>
                   )}
                   {item.subtitle && (
                     <p
-                      className="truncate"
-                      style={{
-                        fontSize: tokens.typography.fontSize.xs,
-                        color: tokens.color.neutral[500],
-                        marginTop: "2px",
-                      }}
+                      className="truncate text-xs text-neutral-500"
+                      style={{ marginTop: "2px" }}
                     >
                       {item.subtitle}
                     </p>
@@ -361,9 +304,8 @@ export default function HeroHeader({
 
   return (
     <section
-      style={{ fontFamily: tokens.typography.fontFamily.sans }}
+      className="relative w-full font-body"
       aria-label="Hero header"
-      className="relative w-full"
     >
       {/* Slide viewport */}
       <div
@@ -458,9 +400,7 @@ export default function HeroHeader({
                   height: "8px",
                   width: i === activeIndex ? "24px" : "8px",
                   backgroundColor:
-                    i === activeIndex
-                      ? "#ffffff"
-                      : "rgba(255,255,255,0.45)",
+                    i === activeIndex ? "#ffffff" : "rgba(255,255,255,0.45)",
                 }}
               />
             ))}
