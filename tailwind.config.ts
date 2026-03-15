@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tokens from "./tokens/tokens.json";
 
 const config: Config = {
   content: [
@@ -9,11 +10,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: tokens.colors.primary,
+        accent: tokens.colors.accent,
+        background: tokens.colors.background,
+        "text-color": tokens.colors.text,
+        neutral: tokens.colors.neutral,
+      },
+      fontFamily: {
+        display: [tokens.typography.fontFamily.display, "serif"],
+        body: [tokens.typography.fontFamily.body, "sans-serif"],
       },
     },
   },
   plugins: [],
 };
+
 export default config;
