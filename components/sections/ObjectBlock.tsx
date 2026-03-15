@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import tokens from "@/tokens/tokens.json";
 import type { StrapiMedia, StrapiLink } from "./types";
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
@@ -59,48 +58,25 @@ const maxWidthAlignClass: Record<string, string> = {
 function ObjectBlockSkeleton() {
   return (
     <div
-      className="w-full animate-pulse px-4 py-16 sm:px-6 lg:px-8"
-      style={{ backgroundColor: tokens.color.neutral[100] }}
+      className="w-full animate-pulse bg-neutral-100 px-4 py-16 sm:px-6 lg:px-8"
       aria-busy="true"
       aria-label="Loading content"
     >
       <div className="mx-auto max-w-7xl">
-        {/* Header skeleton */}
         <div className="mb-10 space-y-3">
-          <div
-            className="mx-auto h-8 w-1/3 rounded-md"
-            style={{ backgroundColor: tokens.color.neutral[300] }}
-          />
-          <div
-            className="mx-auto h-4 w-2/5 rounded"
-            style={{ backgroundColor: tokens.color.neutral[200] }}
-          />
+          <div className="mx-auto h-8 w-1/3 rounded-md bg-neutral-300" />
+          <div className="mx-auto h-4 w-2/5 rounded bg-neutral-200" />
         </div>
-
-        {/* Object item skeletons */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={i}
-              className="flex flex-col items-center gap-4 rounded-xl p-6"
-              style={{ backgroundColor: tokens.color.neutral[200] }}
+              className="flex flex-col items-center gap-4 rounded-xl p-6 bg-neutral-200"
             >
-              <div
-                className="h-14 w-14 rounded-full"
-                style={{ backgroundColor: tokens.color.neutral[300] }}
-              />
-              <div
-                className="h-5 w-1/2 rounded"
-                style={{ backgroundColor: tokens.color.neutral[300] }}
-              />
-              <div
-                className="h-4 w-full rounded"
-                style={{ backgroundColor: tokens.color.neutral[300] }}
-              />
-              <div
-                className="h-4 w-4/5 rounded"
-                style={{ backgroundColor: tokens.color.neutral[300] }}
-              />
+              <div className="h-14 w-14 rounded-full bg-neutral-300" />
+              <div className="h-5 w-1/2 rounded bg-neutral-300" />
+              <div className="h-4 w-full rounded bg-neutral-300" />
+              <div className="h-4 w-4/5 rounded bg-neutral-300" />
             </div>
           ))}
         </div>
@@ -120,31 +96,21 @@ interface LinkButtonProps {
 function LinkButton({ link, variant, isDark }: LinkButtonProps) {
   if (!link.label || !link.url) return null;
 
-  const style: React.CSSProperties =
+  const variantClass =
     variant === "primary"
-      ? {
-          backgroundColor: tokens.color.brand.primary,
-          color: tokens.color.brand.secondary,
-          fontWeight: tokens.typography.fontWeight.semibold,
-          fontSize: tokens.typography.fontSize.sm,
-          borderRadius: tokens.borderRadius.md,
-          letterSpacing: tokens.typography.letterSpacing.wide,
-        }
-      : {
-          border: `1.5px solid ${isDark ? tokens.color.neutral[500] : tokens.color.neutral[300]}`,
-          color: isDark ? tokens.color.neutral[200] : tokens.color.neutral[700],
-          fontWeight: tokens.typography.fontWeight.medium,
-          fontSize: tokens.typography.fontSize.sm,
-          borderRadius: tokens.borderRadius.md,
-        };
+      ? "bg-accent text-white rounded-md text-sm font-semibold tracking-wide"
+      : `border rounded-md text-sm font-medium ${
+          isDark
+            ? "border-neutral-500 text-neutral-200"
+            : "border-neutral-300 text-neutral-700"
+        }`;
 
   return (
     <a
       href={link.url}
       target={link.openInNewTab ? "_blank" : undefined}
       rel={link.openInNewTab ? "noopener noreferrer" : undefined}
-      style={style}
-      className="inline-flex items-center px-5 py-2.5 transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+      className={`inline-flex items-center px-5 py-2.5 transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${variantClass}`}
     >
       {link.label}
     </a>
@@ -162,30 +128,27 @@ interface ObjectItemCardProps {
 
 function ObjectItemCard({ item, blockTheme, centered = false }: ObjectItemCardProps) {
   const isDark = blockTheme === "dark";
-  const textPrimary = isDark ? tokens.color.neutral[100] : tokens.color.neutral[900];
-  const textSecondary = isDark ? tokens.color.neutral[400] : tokens.color.neutral[600];
-  const cardBg =
-    item.backgroundColour ?? (isDark ? tokens.color.neutral[800] : tokens.color.brand.secondary);
+  const titleClass = isDark ? "text-neutral-100" : "text-primary";
+  const bodyClass = isDark ? "text-neutral-400" : "text-neutral-600";
+  const iconBgClass = isDark ? "bg-neutral-700" : "bg-neutral-100";
   const alignClass = centered ? "items-center text-center" : "items-start text-left";
 
   return (
     <article
-      className={`flex h-full flex-col gap-4 rounded-xl p-6 ${alignClass}`}
+      className={`flex h-full flex-col gap-4 rounded-xl p-6 font-body ${alignClass} ${
+        isDark ? "bg-neutral-800" : "bg-background"
+      }`}
       style={{
-        backgroundColor: cardBg,
+        ...(item.backgroundColour ? { backgroundColor: item.backgroundColour } : {}),
         boxShadow: isDark
           ? "0 1px 3px rgba(0,0,0,0.30)"
           : "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
-        fontFamily: tokens.typography.fontFamily.sans,
       }}
     >
       {/* Icon */}
       {item.icon?.url && (
         <div
-          className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl"
-          style={{
-            backgroundColor: isDark ? tokens.color.neutral[700] : tokens.color.neutral[100],
-          }}
+          className={`flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl ${iconBgClass}`}
         >
           <img
             src={item.icon.url}
@@ -198,37 +161,19 @@ function ObjectItemCard({ item, blockTheme, centered = false }: ObjectItemCardPr
 
       {/* Title */}
       {item.title && (
-        <h3
-          style={{
-            color: textPrimary,
-            fontSize: tokens.typography.fontSize.lg,
-            fontWeight: tokens.typography.fontWeight.semibold,
-            lineHeight: tokens.typography.lineHeight.snug,
-          }}
-        >
+        <h3 className={`font-display text-lg font-semibold leading-snug ${titleClass}`}>
           {item.title}
         </h3>
       )}
 
       {/* Blurb */}
       {item.blurb && (
-        <p
-          className="flex-1"
-          style={{
-            color: textSecondary,
-            fontSize: tokens.typography.fontSize.sm,
-            lineHeight: tokens.typography.lineHeight.relaxed,
-          }}
-        >
-          {item.blurb}
-        </p>
+        <p className={`flex-1 text-sm leading-relaxed ${bodyClass}`}>{item.blurb}</p>
       )}
 
       {/* Buttons */}
       {(item.primaryButtonLink || item.secondaryButtonLink) && (
-        <div
-          className={`mt-auto flex flex-wrap gap-3 pt-2 ${centered ? "justify-center" : ""}`}
-        >
+        <div className={`mt-auto flex flex-wrap gap-3 pt-2 ${centered ? "justify-center" : ""}`}>
           {item.primaryButtonLink && (
             <LinkButton link={item.primaryButtonLink} variant="primary" isDark={isDark} />
           )}
@@ -252,18 +197,22 @@ interface AlternatingRowProps {
 function AlternatingRow({ item, index, blockTheme }: AlternatingRowProps) {
   const isEven = index % 2 === 0;
   const isDark = blockTheme === "dark";
-  const textPrimary = isDark ? tokens.color.neutral[100] : tokens.color.neutral[900];
-  const textSecondary = isDark ? tokens.color.neutral[400] : tokens.color.neutral[600];
+  const titleClass = isDark ? "text-neutral-100" : "text-primary";
+  const bodyClass = isDark ? "text-neutral-400" : "text-neutral-600";
+  const iconPanelBgClass = isDark ? "bg-neutral-800" : "bg-neutral-100";
+  const placeholderCircleBgClass = isDark ? "bg-neutral-700" : "bg-neutral-200";
 
   return (
     <article
-      className={`flex flex-col gap-8 md:flex-row md:items-center ${isEven ? "" : "md:flex-row-reverse"}`}
+      className={`flex flex-col gap-8 md:flex-row md:items-center ${
+        isEven ? "" : "md:flex-row-reverse"
+      }`}
     >
       {/* Icon panel */}
       <div
-        className="flex w-full shrink-0 items-center justify-center rounded-2xl p-10 md:w-2/5"
+        className={`flex w-full shrink-0 items-center justify-center rounded-2xl p-10 md:w-2/5 ${iconPanelBgClass}`}
         style={{
-          backgroundColor: item.backgroundColour ?? (isDark ? tokens.color.neutral[800] : tokens.color.neutral[100]),
+          ...(item.backgroundColour ? { backgroundColor: item.backgroundColour } : {}),
           minHeight: "200px",
         }}
       >
@@ -277,8 +226,7 @@ function AlternatingRow({ item, index, blockTheme }: AlternatingRowProps) {
         ) : (
           /* Placeholder icon when no icon provided */
           <div
-            className="flex h-20 w-20 items-center justify-center rounded-full"
-            style={{ backgroundColor: isDark ? tokens.color.neutral[700] : tokens.color.neutral[200] }}
+            className={`flex h-20 w-20 items-center justify-center rounded-full ${placeholderCircleBgClass}`}
             aria-hidden="true"
           >
             <svg
@@ -288,7 +236,7 @@ function AlternatingRow({ item, index, blockTheme }: AlternatingRowProps) {
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
-              style={{ color: isDark ? tokens.color.neutral[400] : tokens.color.neutral[400] }}
+              className="text-neutral-400"
             >
               <rect x="3" y="3" width="7" height="7" rx="1" />
               <rect x="14" y="3" width="7" height="7" rx="1" />
@@ -300,32 +248,14 @@ function AlternatingRow({ item, index, blockTheme }: AlternatingRowProps) {
       </div>
 
       {/* Text */}
-      <div
-        className="flex flex-col gap-4 md:w-3/5"
-        style={{ fontFamily: tokens.typography.fontFamily.sans }}
-      >
+      <div className="flex flex-col gap-4 font-body md:w-3/5">
         {item.title && (
-          <h3
-            style={{
-              color: textPrimary,
-              fontSize: tokens.typography.fontSize["2xl"],
-              fontWeight: tokens.typography.fontWeight.bold,
-              lineHeight: tokens.typography.lineHeight.tight,
-            }}
-          >
+          <h3 className={`font-display text-2xl font-bold leading-tight ${titleClass}`}>
             {item.title}
           </h3>
         )}
         {item.blurb && (
-          <p
-            style={{
-              color: textSecondary,
-              fontSize: tokens.typography.fontSize.base,
-              lineHeight: tokens.typography.lineHeight.relaxed,
-            }}
-          >
-            {item.blurb}
-          </p>
+          <p className={`text-base leading-relaxed ${bodyClass}`}>{item.blurb}</p>
         )}
         {(item.primaryButtonLink || item.secondaryButtonLink) && (
           <div className="flex flex-wrap gap-3 pt-2">
@@ -394,13 +324,23 @@ function CarouselView({ items, interval, theme }: CarouselViewProps) {
             type="button"
             onClick={prev}
             aria-label="Previous item"
-            className="flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
-            style={{
-              borderColor: isDark ? tokens.color.neutral[600] : tokens.color.neutral[300],
-              color: isDark ? tokens.color.neutral[200] : tokens.color.neutral[700],
-            }}
+            className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${
+              isDark
+                ? "border-neutral-600 text-neutral-200"
+                : "border-neutral-300 text-neutral-700"
+            }`}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
@@ -414,17 +354,14 @@ function CarouselView({ items, interval, theme }: CarouselViewProps) {
                 aria-label={`Item ${i + 1}${item.title ? `: ${item.title}` : ""}`}
                 aria-selected={i === active}
                 onClick={() => setActive(i)}
-                className="rounded-full transition-all duration-300"
-                style={{
-                  height: "8px",
-                  width: i === active ? "24px" : "8px",
-                  backgroundColor:
-                    i === active
-                      ? tokens.color.brand.primary
-                      : isDark
-                      ? tokens.color.neutral[600]
-                      : tokens.color.neutral[300],
-                }}
+                className={`rounded-full transition-all duration-300 ${
+                  i === active
+                    ? "bg-accent"
+                    : isDark
+                    ? "bg-neutral-600"
+                    : "bg-neutral-300"
+                }`}
+                style={{ height: "8px", width: i === active ? "24px" : "8px" }}
               />
             ))}
           </div>
@@ -433,13 +370,23 @@ function CarouselView({ items, interval, theme }: CarouselViewProps) {
             type="button"
             onClick={next}
             aria-label="Next item"
-            className="flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
-            style={{
-              borderColor: isDark ? tokens.color.neutral[600] : tokens.color.neutral[300],
-              color: isDark ? tokens.color.neutral[200] : tokens.color.neutral[700],
-            }}
+            className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${
+              isDark
+                ? "border-neutral-600 text-neutral-200"
+                : "border-neutral-300 text-neutral-700"
+            }`}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
               <polyline points="9 18 15 12 9 6" />
             </svg>
           </button>
@@ -462,41 +409,33 @@ interface SectionHeaderProps {
 function SectionHeader({ title, subtitle, alignment, isDark, link }: SectionHeaderProps) {
   if (!title && !subtitle) return null;
 
-  const textPrimary = isDark ? tokens.color.neutral[100] : tokens.color.neutral[900];
-  const textSecondary = isDark ? tokens.color.neutral[400] : tokens.color.neutral[600];
+  const titleClass = isDark ? "text-neutral-100" : "text-primary";
+  const bodyClass = isDark ? "text-neutral-400" : "text-neutral-600";
 
   return (
     <div
-      className={`mb-10 max-w-2xl ${maxWidthAlignClass[alignment]} ${textAlignClass[alignment]}`}
-      style={{ fontFamily: tokens.typography.fontFamily.sans }}
+      className={`mb-10 max-w-2xl font-body ${maxWidthAlignClass[alignment]} ${textAlignClass[alignment]}`}
     >
       {title && (
         <h2
-          style={{
-            color: textPrimary,
-            fontSize: tokens.typography.fontSize["3xl"],
-            fontWeight: tokens.typography.fontWeight.bold,
-            lineHeight: tokens.typography.lineHeight.tight,
-            letterSpacing: tokens.typography.letterSpacing.tight,
-          }}
+          className={`font-display text-3xl font-bold leading-tight tracking-tight ${titleClass}`}
         >
           {title}
         </h2>
       )}
       {subtitle && (
-        <p
-          style={{
-            color: textSecondary,
-            fontSize: tokens.typography.fontSize.lg,
-            lineHeight: tokens.typography.lineHeight.relaxed,
-            marginTop: tokens.spacing[3],
-          }}
-        >
-          {subtitle}
-        </p>
+        <p className={`mt-3 text-lg leading-relaxed ${bodyClass}`}>{subtitle}</p>
       )}
       {link?.url && link?.label && (
-        <div className={`mt-6 ${alignment === "center" ? "flex justify-center" : alignment === "right" ? "flex justify-end" : ""}`}>
+        <div
+          className={`mt-6 ${
+            alignment === "center"
+              ? "flex justify-center"
+              : alignment === "right"
+              ? "flex justify-end"
+              : ""
+          }`}
+        >
           <LinkButton link={link} variant="secondary" isDark={isDark} />
         </div>
       )}
@@ -525,18 +464,9 @@ export default function ObjectBlock({
   const safeColumns = Math.max(1, Math.min(6, columns)) as keyof typeof gridColsClass;
   const hasBgImage = !!backgroundImage?.url;
 
-  const sectionStyle: React.CSSProperties = {
-    fontFamily: tokens.typography.fontFamily.sans,
-    backgroundColor: !hasBgImage
-      ? (backgroundColour ?? (isDark ? tokens.color.neutral[900] : tokens.color.neutral[50]))
-      : undefined,
-  };
-
   const renderItems = () => {
     if (layout === "carousel") {
-      return (
-        <CarouselView items={items} interval={carouselInterval} theme={theme} />
-      );
+      return <CarouselView items={items} interval={carouselInterval} theme={theme} />;
     }
 
     if (layout === "alternating") {
@@ -554,7 +484,12 @@ export default function ObjectBlock({
     return (
       <div className={`grid gap-6 ${gridColsClass[safeColumns] ?? gridColsClass[3]}`}>
         {items.map((item) => (
-          <ObjectItemCard key={item.name} item={item} blockTheme={theme} centered={isCentered} />
+          <ObjectItemCard
+            key={item.name}
+            item={item}
+            blockTheme={theme}
+            centered={isCentered}
+          />
         ))}
       </div>
     );
@@ -562,8 +497,10 @@ export default function ObjectBlock({
 
   return (
     <section
-      className="relative w-full overflow-hidden"
-      style={sectionStyle}
+      className={`relative w-full overflow-hidden font-body ${
+        !hasBgImage ? (isDark ? "bg-primary" : "bg-neutral-50") : ""
+      }`}
+      style={!hasBgImage && backgroundColour ? { backgroundColor: backgroundColour } : undefined}
       aria-label={title ?? "Object block"}
     >
       {/* Background image */}
@@ -603,17 +540,22 @@ export default function ObjectBlock({
                 href={link.url}
                 target={link.openInNewTab ? "_blank" : undefined}
                 rel={link.openInNewTab ? "noopener noreferrer" : undefined}
-                style={{
-                  color: isDark ? tokens.color.neutral[200] : tokens.color.neutral[700],
-                  fontSize: tokens.typography.fontSize.sm,
-                  fontWeight: tokens.typography.fontWeight.semibold,
-                  letterSpacing: tokens.typography.letterSpacing.wide,
-                  fontFamily: tokens.typography.fontFamily.sans,
-                }}
-                className="inline-flex items-center gap-1 underline underline-offset-4 transition-opacity hover:opacity-70"
+                className={`inline-flex items-center gap-1 font-body text-sm font-semibold tracking-wide underline underline-offset-4 transition-opacity hover:opacity-70 ${
+                  isDark ? "text-neutral-200" : "text-neutral-700"
+                }`}
               >
                 {link.label}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
               </a>

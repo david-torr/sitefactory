@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import tokens from "@/tokens/tokens.json";
 import type { StrapiMedia, StrapiLink, StrapiVideo } from "./types";
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
@@ -64,32 +63,24 @@ const maxWidthAlignClass: Record<string, string> = {
 function ContentBlockSkeleton() {
   return (
     <div
-      className="w-full animate-pulse px-4 py-16 sm:px-6 lg:px-8"
-      style={{ backgroundColor: tokens.color.neutral[100] }}
+      className="w-full animate-pulse bg-neutral-100 px-4 py-16 sm:px-6 lg:px-8"
       aria-busy="true"
       aria-label="Loading content"
     >
       <div className="mx-auto max-w-7xl">
-        {/* Section header skeleton */}
         <div className="mb-10 space-y-3">
-          <div className="h-8 w-1/3 rounded-md" style={{ backgroundColor: tokens.color.neutral[300] }} />
-          <div className="h-4 w-1/2 rounded" style={{ backgroundColor: tokens.color.neutral[200] }} />
+          <div className="h-8 w-1/3 rounded-md bg-neutral-300" />
+          <div className="h-4 w-1/2 rounded bg-neutral-200" />
         </div>
-
-        {/* Card skeletons */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="overflow-hidden rounded-lg"
-              style={{ backgroundColor: tokens.color.neutral[200] }}
-            >
-              <div className="h-48 w-full" style={{ backgroundColor: tokens.color.neutral[300] }} />
+            <div key={i} className="overflow-hidden rounded-lg bg-neutral-200">
+              <div className="h-48 w-full bg-neutral-300" />
               <div className="space-y-3 p-5">
-                <div className="h-5 w-3/4 rounded" style={{ backgroundColor: tokens.color.neutral[300] }} />
-                <div className="h-4 w-full rounded" style={{ backgroundColor: tokens.color.neutral[300] }} />
-                <div className="h-4 w-5/6 rounded" style={{ backgroundColor: tokens.color.neutral[300] }} />
-                <div className="h-9 w-28 rounded-md pt-1" style={{ backgroundColor: tokens.color.neutral[300] }} />
+                <div className="h-5 w-3/4 rounded bg-neutral-300" />
+                <div className="h-4 w-full rounded bg-neutral-300" />
+                <div className="h-4 w-5/6 rounded bg-neutral-300" />
+                <div className="h-9 w-28 rounded-md pt-1 bg-neutral-300" />
               </div>
             </div>
           ))}
@@ -110,31 +101,21 @@ interface LinkButtonProps {
 function LinkButton({ link, variant, isDark }: LinkButtonProps) {
   if (!link.label || !link.url) return null;
 
-  const primaryStyle: React.CSSProperties =
+  const variantClass =
     variant === "primary"
-      ? {
-          backgroundColor: tokens.color.brand.primary,
-          color: tokens.color.brand.secondary,
-          fontWeight: tokens.typography.fontWeight.semibold,
-          fontSize: tokens.typography.fontSize.sm,
-          borderRadius: tokens.borderRadius.md,
-          letterSpacing: tokens.typography.letterSpacing.wide,
-        }
-      : {
-          border: `1.5px solid ${isDark ? tokens.color.neutral[500] : tokens.color.neutral[300]}`,
-          color: isDark ? tokens.color.neutral[200] : tokens.color.neutral[700],
-          fontWeight: tokens.typography.fontWeight.medium,
-          fontSize: tokens.typography.fontSize.sm,
-          borderRadius: tokens.borderRadius.md,
-        };
+      ? "bg-accent text-white rounded-md text-sm font-semibold tracking-wide"
+      : `border rounded-md text-sm font-medium ${
+          isDark
+            ? "border-neutral-500 text-neutral-200"
+            : "border-neutral-300 text-neutral-700"
+        }`;
 
   return (
     <a
       href={link.url}
       target={link.openInNewTab ? "_blank" : undefined}
       rel={link.openInNewTab ? "noopener noreferrer" : undefined}
-      style={primaryStyle}
-      className="inline-flex items-center px-5 py-2.5 transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+      className={`inline-flex items-center px-5 py-2.5 transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${variantClass}`}
     >
       {link.label}
     </a>
@@ -151,20 +132,20 @@ interface ContentItemCardProps {
 
 function ContentItemCard({ item, blockTheme, compact = false }: ContentItemCardProps) {
   const isDark = (item.themeOverride ?? blockTheme) === "dark";
-  const textPrimary = isDark ? tokens.color.neutral[100] : tokens.color.neutral[900];
-  const textSecondary = isDark ? tokens.color.neutral[400] : tokens.color.neutral[600];
-  const cardBg = item.bgColour ?? (isDark ? tokens.color.neutral[800] : tokens.color.brand.secondary);
+  const titleClass = isDark ? "text-neutral-100" : "text-primary";
+  const bodyClass = isDark ? "text-neutral-400" : "text-neutral-600";
   const alignment = item.alignment ?? "left";
   const videoSrc = item.video?.file?.url ?? item.video?.url;
   const hasMedia = !!(item.image?.url || videoSrc);
 
   return (
     <article
-      className="flex h-full flex-col overflow-hidden rounded-lg"
+      className={`flex h-full flex-col overflow-hidden rounded-lg font-body ${
+        isDark ? "bg-neutral-800" : "bg-background"
+      }`}
       style={{
-        backgroundColor: cardBg,
+        ...(item.bgColour ? { backgroundColor: item.bgColour } : {}),
         boxShadow: "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
-        fontFamily: tokens.typography.fontFamily.sans,
       }}
     >
       {/* Media */}
@@ -192,36 +173,27 @@ function ContentItemCard({ item, blockTheme, compact = false }: ContentItemCardP
       )}
 
       {/* Body */}
-      <div
-        className={`flex flex-1 flex-col gap-3 p-5 ${textAlignClass[alignment]}`}
-      >
+      <div className={`flex flex-1 flex-col gap-3 p-5 ${textAlignClass[alignment]}`}>
         {item.title && (
-          <h3
-            style={{
-              color: textPrimary,
-              fontSize: tokens.typography.fontSize.lg,
-              fontWeight: tokens.typography.fontWeight.semibold,
-              lineHeight: tokens.typography.lineHeight.snug,
-            }}
-          >
+          <h3 className={`font-display text-lg font-semibold leading-snug ${titleClass}`}>
             {item.title}
           </h3>
         )}
-
         {item.blurb && (
-          <p
-            style={{
-              color: textSecondary,
-              fontSize: tokens.typography.fontSize.sm,
-              lineHeight: tokens.typography.lineHeight.relaxed,
-            }}
-          >
+          <p className={`text-sm leading-relaxed ${bodyClass}`}>
             {item.blurb}
           </p>
         )}
-
         {(item.primaryLink || item.secondaryLink) && (
-          <div className={`mt-auto flex flex-wrap gap-3 pt-2 ${alignment === "center" ? "justify-center" : alignment === "right" ? "justify-end" : ""}`}>
+          <div
+            className={`mt-auto flex flex-wrap gap-3 pt-2 ${
+              alignment === "center"
+                ? "justify-center"
+                : alignment === "right"
+                ? "justify-end"
+                : ""
+            }`}
+          >
             {item.primaryLink && (
               <LinkButton link={item.primaryLink} variant="primary" isDark={isDark} />
             )}
@@ -237,16 +209,19 @@ function ContentItemCard({ item, blockTheme, compact = false }: ContentItemCardP
 
 // ─── Content item list row ────────────────────────────────────────────────────
 
-function ContentItemRow({ item, blockTheme }: { item: ContentItem; blockTheme: "light" | "dark" }) {
+function ContentItemRow({
+  item,
+  blockTheme,
+}: {
+  item: ContentItem;
+  blockTheme: "light" | "dark";
+}) {
   const isDark = (item.themeOverride ?? blockTheme) === "dark";
-  const textPrimary = isDark ? tokens.color.neutral[100] : tokens.color.neutral[900];
-  const textSecondary = isDark ? tokens.color.neutral[400] : tokens.color.neutral[600];
+  const titleClass = isDark ? "text-neutral-100" : "text-primary";
+  const bodyClass = isDark ? "text-neutral-400" : "text-neutral-600";
 
   return (
-    <article
-      className="flex gap-5 rounded-lg p-4 transition-colors hover:bg-black/5"
-      style={{ fontFamily: tokens.typography.fontFamily.sans }}
-    >
+    <article className="flex gap-5 rounded-lg p-4 font-body transition-colors hover:bg-black/5">
       {item.image?.url && (
         <img
           src={item.image.url}
@@ -257,26 +232,12 @@ function ContentItemRow({ item, blockTheme }: { item: ContentItem; blockTheme: "
       )}
       <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
         {item.title && (
-          <h3
-            className="truncate"
-            style={{
-              color: textPrimary,
-              fontSize: tokens.typography.fontSize.base,
-              fontWeight: tokens.typography.fontWeight.semibold,
-            }}
-          >
+          <h3 className={`truncate font-display text-base font-semibold ${titleClass}`}>
             {item.title}
           </h3>
         )}
         {item.blurb && (
-          <p
-            style={{
-              color: textSecondary,
-              fontSize: tokens.typography.fontSize.sm,
-              lineHeight: tokens.typography.lineHeight.relaxed,
-            }}
-            className="line-clamp-2"
-          >
+          <p className={`line-clamp-2 text-sm leading-relaxed ${bodyClass}`}>
             {item.blurb}
           </p>
         )}
@@ -320,7 +281,6 @@ function CarouselView({ items, interval, theme }: CarouselViewProps) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Slide */}
       <div className="relative overflow-hidden rounded-xl" style={{ minHeight: "420px" }}>
         {items.map((item, i) => (
           <div
@@ -338,20 +298,29 @@ function CarouselView({ items, interval, theme }: CarouselViewProps) {
         ))}
       </div>
 
-      {/* Controls */}
       {count > 1 && (
         <div className="mt-6 flex items-center justify-center gap-4">
           <button
             type="button"
             onClick={prev}
             aria-label="Previous item"
-            className="flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
-            style={{
-              borderColor: isDark ? tokens.color.neutral[600] : tokens.color.neutral[300],
-              color: isDark ? tokens.color.neutral[200] : tokens.color.neutral[700],
-            }}
+            className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${
+              isDark
+                ? "border-neutral-600 text-neutral-200"
+                : "border-neutral-300 text-neutral-700"
+            }`}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
@@ -365,15 +334,14 @@ function CarouselView({ items, interval, theme }: CarouselViewProps) {
                 aria-label={`Item ${i + 1}`}
                 aria-selected={i === active}
                 onClick={() => setActive(i)}
-                className="rounded-full transition-all duration-300"
-                style={{
-                  height: "8px",
-                  width: i === active ? "24px" : "8px",
-                  backgroundColor:
-                    i === active
-                      ? tokens.color.brand.primary
-                      : (isDark ? tokens.color.neutral[600] : tokens.color.neutral[300]),
-                }}
+                className={`rounded-full transition-all duration-300 ${
+                  i === active
+                    ? "bg-accent"
+                    : isDark
+                    ? "bg-neutral-600"
+                    : "bg-neutral-300"
+                }`}
+                style={{ height: "8px", width: i === active ? "24px" : "8px" }}
               />
             ))}
           </div>
@@ -382,13 +350,23 @@ function CarouselView({ items, interval, theme }: CarouselViewProps) {
             type="button"
             onClick={next}
             aria-label="Next item"
-            className="flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
-            style={{
-              borderColor: isDark ? tokens.color.neutral[600] : tokens.color.neutral[300],
-              color: isDark ? tokens.color.neutral[200] : tokens.color.neutral[700],
-            }}
+            className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${
+              isDark
+                ? "border-neutral-600 text-neutral-200"
+                : "border-neutral-300 text-neutral-700"
+            }`}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
               <polyline points="9 18 15 12 9 6" />
             </svg>
           </button>
@@ -411,41 +389,33 @@ interface SectionHeaderProps {
 function SectionHeader({ title, subtitle, alignment, isDark, link }: SectionHeaderProps) {
   if (!title && !subtitle) return null;
 
-  const textPrimary = isDark ? tokens.color.neutral[100] : tokens.color.neutral[900];
-  const textSecondary = isDark ? tokens.color.neutral[400] : tokens.color.neutral[600];
+  const titleClass = isDark ? "text-neutral-100" : "text-primary";
+  const bodyClass = isDark ? "text-neutral-400" : "text-neutral-600";
 
   return (
     <div
-      className={`mb-10 max-w-2xl ${maxWidthAlignClass[alignment]} ${textAlignClass[alignment]}`}
-      style={{ fontFamily: tokens.typography.fontFamily.sans }}
+      className={`mb-10 max-w-2xl font-body ${maxWidthAlignClass[alignment]} ${textAlignClass[alignment]}`}
     >
       {title && (
         <h2
-          style={{
-            color: textPrimary,
-            fontSize: tokens.typography.fontSize["3xl"],
-            fontWeight: tokens.typography.fontWeight.bold,
-            lineHeight: tokens.typography.lineHeight.tight,
-            letterSpacing: tokens.typography.letterSpacing.tight,
-          }}
+          className={`font-display text-3xl font-bold leading-tight tracking-tight ${titleClass}`}
         >
           {title}
         </h2>
       )}
       {subtitle && (
-        <p
-          style={{
-            color: textSecondary,
-            fontSize: tokens.typography.fontSize.lg,
-            lineHeight: tokens.typography.lineHeight.relaxed,
-            marginTop: tokens.spacing[3],
-          }}
-        >
-          {subtitle}
-        </p>
+        <p className={`mt-3 text-lg leading-relaxed ${bodyClass}`}>{subtitle}</p>
       )}
       {link?.url && link?.label && (
-        <div className={`mt-6 ${alignment === "center" ? "flex justify-center" : alignment === "right" ? "flex justify-end" : ""}`}>
+        <div
+          className={`mt-6 ${
+            alignment === "center"
+              ? "flex justify-center"
+              : alignment === "right"
+              ? "flex justify-end"
+              : ""
+          }`}
+        >
           <LinkButton link={link} variant="secondary" isDark={isDark} />
         </div>
       )}
@@ -475,27 +445,20 @@ export default function ContentBlock({
   const safeColumns = Math.max(1, Math.min(6, columns)) as keyof typeof gridColsClass;
   const hasBgImage = !!backgroundImage?.url;
 
-  const sectionStyle: React.CSSProperties = {
-    fontFamily: tokens.typography.fontFamily.sans,
-    backgroundColor: !hasBgImage
-      ? (backgroundColour ?? (isDark ? tokens.color.neutral[900] : tokens.color.neutral[50]))
-      : undefined,
-  };
-
   // ── Render items ──────────────────────────────────────────────────────────
 
   const renderItems = () => {
-    // Carousel
     if (style === "carousel") {
-      return (
-        <CarouselView items={items} interval={carouselInterval} theme={theme} />
-      );
+      return <CarouselView items={items} interval={carouselInterval} theme={theme} />;
     }
 
-    // List
     if (style === "list") {
       return (
-        <div className={`flex flex-col divide-y ${isDark ? "divide-neutral-700" : "divide-neutral-200"}`}>
+        <div
+          className={`flex flex-col divide-y ${
+            isDark ? "divide-neutral-700" : "divide-neutral-200"
+          }`}
+        >
           {items.map((item) => (
             <ContentItemRow key={item.name} item={item} blockTheme={theme} />
           ))}
@@ -503,15 +466,9 @@ export default function ContentBlock({
       );
     }
 
-    // Masonry (CSS columns)
     if (style === "masonry") {
       return (
-        <div
-          style={{
-            columns: `${safeColumns}`,
-            columnGap: tokens.spacing[6],
-          }}
-        >
+        <div style={{ columns: `${safeColumns}`, columnGap: "1.5rem" }}>
           {items.map((item) => (
             <div key={item.name} className="mb-6 break-inside-avoid">
               <ContentItemCard item={item} blockTheme={theme} />
@@ -521,20 +478,21 @@ export default function ContentBlock({
       );
     }
 
-    // Card — layout variants
     if (layout === "alternating") {
       return (
         <div className="flex flex-col gap-16">
           {items.map((item, i) => {
             const isEven = i % 2 === 0;
             const isDarkItem = (item.themeOverride ?? theme) === "dark";
-            const textPrimary = isDarkItem ? tokens.color.neutral[100] : tokens.color.neutral[900];
-            const textSecondary = isDarkItem ? tokens.color.neutral[400] : tokens.color.neutral[600];
+            const titleClass = isDarkItem ? "text-neutral-100" : "text-primary";
+            const bodyClass = isDarkItem ? "text-neutral-400" : "text-neutral-600";
 
             return (
               <article
                 key={item.name}
-                className={`flex flex-col gap-8 md:flex-row md:items-center ${isEven ? "" : "md:flex-row-reverse"}`}
+                className={`flex flex-col gap-8 md:flex-row md:items-center ${
+                  isEven ? "" : "md:flex-row-reverse"
+                }`}
               >
                 {item.image?.url && (
                   <div className="w-full overflow-hidden rounded-xl md:w-1/2">
@@ -547,39 +505,35 @@ export default function ContentBlock({
                   </div>
                 )}
                 <div
-                  className={`flex flex-col gap-4 ${item.image?.url ? "md:w-1/2" : "w-full"}`}
-                  style={{ fontFamily: tokens.typography.fontFamily.sans }}
+                  className={`flex flex-col gap-4 font-body ${
+                    item.image?.url ? "md:w-1/2" : "w-full"
+                  }`}
                 >
                   {item.title && (
                     <h3
-                      style={{
-                        color: textPrimary,
-                        fontSize: tokens.typography.fontSize["2xl"],
-                        fontWeight: tokens.typography.fontWeight.bold,
-                        lineHeight: tokens.typography.lineHeight.tight,
-                      }}
+                      className={`font-display text-2xl font-bold leading-tight ${titleClass}`}
                     >
                       {item.title}
                     </h3>
                   )}
                   {item.blurb && (
-                    <p
-                      style={{
-                        color: textSecondary,
-                        fontSize: tokens.typography.fontSize.base,
-                        lineHeight: tokens.typography.lineHeight.relaxed,
-                      }}
-                    >
-                      {item.blurb}
-                    </p>
+                    <p className={`text-base leading-relaxed ${bodyClass}`}>{item.blurb}</p>
                   )}
                   {(item.primaryLink || item.secondaryLink) && (
                     <div className="flex flex-wrap gap-3 pt-2">
                       {item.primaryLink && (
-                        <LinkButton link={item.primaryLink} variant="primary" isDark={isDarkItem} />
+                        <LinkButton
+                          link={item.primaryLink}
+                          variant="primary"
+                          isDark={isDarkItem}
+                        />
                       )}
                       {item.secondaryLink && (
-                        <LinkButton link={item.secondaryLink} variant="secondary" isDark={isDarkItem} />
+                        <LinkButton
+                          link={item.secondaryLink}
+                          variant="secondary"
+                          isDark={isDarkItem}
+                        />
                       )}
                     </div>
                   )}
@@ -594,17 +548,18 @@ export default function ContentBlock({
     if (layout === "featured") {
       const [featured, ...rest] = items;
       const isDarkFeatured = (featured.themeOverride ?? theme) === "dark";
-      const textPrimary = isDarkFeatured ? tokens.color.neutral[100] : tokens.color.neutral[900];
-      const textSecondary = isDarkFeatured ? tokens.color.neutral[400] : tokens.color.neutral[600];
-      const featuredBg = featured.bgColour ?? (isDarkFeatured ? tokens.color.neutral[800] : tokens.color.brand.secondary);
+      const titleClass = isDarkFeatured ? "text-neutral-100" : "text-primary";
+      const bodyClass = isDarkFeatured ? "text-neutral-400" : "text-neutral-600";
 
       return (
         <div className="flex flex-col gap-8">
           {/* Featured item */}
           <article
-            className="flex flex-col overflow-hidden rounded-xl md:flex-row"
+            className={`flex flex-col overflow-hidden rounded-xl md:flex-row ${
+              isDarkFeatured ? "bg-neutral-800" : "bg-background"
+            }`}
             style={{
-              backgroundColor: featuredBg,
+              ...(featured.bgColour ? { backgroundColor: featured.bgColour } : {}),
               boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
             }}
           >
@@ -618,37 +573,32 @@ export default function ContentBlock({
                 />
               </div>
             )}
-            <div className="flex flex-col justify-center gap-4 p-8 md:w-1/2">
+            <div className="flex flex-col justify-center gap-4 p-8 font-body md:w-1/2">
               {featured.title && (
                 <h3
-                  style={{
-                    color: textPrimary,
-                    fontSize: tokens.typography.fontSize["3xl"],
-                    fontWeight: tokens.typography.fontWeight.bold,
-                    lineHeight: tokens.typography.lineHeight.tight,
-                  }}
+                  className={`font-display text-3xl font-bold leading-tight ${titleClass}`}
                 >
                   {featured.title}
                 </h3>
               )}
               {featured.blurb && (
-                <p
-                  style={{
-                    color: textSecondary,
-                    fontSize: tokens.typography.fontSize.base,
-                    lineHeight: tokens.typography.lineHeight.relaxed,
-                  }}
-                >
-                  {featured.blurb}
-                </p>
+                <p className={`text-base leading-relaxed ${bodyClass}`}>{featured.blurb}</p>
               )}
               {(featured.primaryLink || featured.secondaryLink) && (
                 <div className="flex flex-wrap gap-3 pt-2">
                   {featured.primaryLink && (
-                    <LinkButton link={featured.primaryLink} variant="primary" isDark={isDarkFeatured} />
+                    <LinkButton
+                      link={featured.primaryLink}
+                      variant="primary"
+                      isDark={isDarkFeatured}
+                    />
                   )}
                   {featured.secondaryLink && (
-                    <LinkButton link={featured.secondaryLink} variant="secondary" isDark={isDarkFeatured} />
+                    <LinkButton
+                      link={featured.secondaryLink}
+                      variant="secondary"
+                      isDark={isDarkFeatured}
+                    />
                   )}
                 </div>
               )}
@@ -679,8 +629,10 @@ export default function ContentBlock({
 
   return (
     <section
-      className="relative w-full overflow-hidden"
-      style={sectionStyle}
+      className={`relative w-full overflow-hidden font-body ${
+        !hasBgImage ? (isDark ? "bg-primary" : "bg-neutral-50") : ""
+      }`}
+      style={!hasBgImage && backgroundColour ? { backgroundColor: backgroundColour } : undefined}
       aria-label={title ?? "Content block"}
     >
       {/* Background image */}
@@ -720,17 +672,22 @@ export default function ContentBlock({
                 href={link.url}
                 target={link.openInNewTab ? "_blank" : undefined}
                 rel={link.openInNewTab ? "noopener noreferrer" : undefined}
-                style={{
-                  color: isDark ? tokens.color.neutral[200] : tokens.color.neutral[700],
-                  fontSize: tokens.typography.fontSize.sm,
-                  fontWeight: tokens.typography.fontWeight.semibold,
-                  letterSpacing: tokens.typography.letterSpacing.wide,
-                  fontFamily: tokens.typography.fontFamily.sans,
-                }}
-                className="inline-flex items-center gap-1 underline underline-offset-4 transition-opacity hover:opacity-70"
+                className={`inline-flex items-center gap-1 font-body text-sm font-semibold tracking-wide underline underline-offset-4 transition-opacity hover:opacity-70 ${
+                  isDark ? "text-neutral-200" : "text-neutral-700"
+                }`}
               >
                 {link.label}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
               </a>

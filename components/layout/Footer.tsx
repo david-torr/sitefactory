@@ -1,5 +1,4 @@
 import Link from "next/link";
-import tokens from "@/tokens/tokens.json";
 
 export interface FooterLink {
   label: string;
@@ -29,13 +28,7 @@ export default function Footer({
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer
-      style={{
-        backgroundColor: tokens.color.neutral[900],
-        fontFamily: tokens.typography.fontFamily.sans,
-        color: tokens.color.neutral[400],
-      }}
-    >
+    <footer className="bg-neutral-900 font-body text-neutral-400">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Main footer content */}
         <div className="py-16">
@@ -46,14 +39,7 @@ export default function Footer({
                 {logo}
               </Link>
               {tagline && (
-                <p
-                  style={{
-                    fontSize: tokens.typography.fontSize.sm,
-                    lineHeight: tokens.typography.lineHeight.relaxed,
-                    color: tokens.color.neutral[400],
-                  }}
-                  className="mt-4 max-w-xs"
-                >
+                <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-400">
                   {tagline}
                 </p>
               )}
@@ -63,15 +49,7 @@ export default function Footer({
             <div className="grid grid-cols-2 gap-8 lg:col-span-8 lg:grid-cols-3">
               {linkGroups.map((group) => (
                 <div key={group.heading}>
-                  <h3
-                    style={{
-                      fontSize: tokens.typography.fontSize.xs,
-                      fontWeight: tokens.typography.fontWeight.semibold,
-                      letterSpacing: tokens.typography.letterSpacing.widest,
-                      color: tokens.color.neutral[100],
-                      textTransform: "uppercase",
-                    }}
-                  >
+                  <h3 className="font-display text-xs font-semibold uppercase tracking-widest text-neutral-100">
                     {group.heading}
                   </h3>
                   <ul className="mt-4 space-y-3">
@@ -79,8 +57,7 @@ export default function Footer({
                       <li key={link.href}>
                         <Link
                           href={link.href}
-                          style={{ fontSize: tokens.typography.fontSize.sm }}
-                          className="transition-colors hover:text-white"
+                          className="text-sm transition-colors hover:text-white"
                         >
                           {link.label}
                         </Link>
@@ -94,11 +71,8 @@ export default function Footer({
         </div>
 
         {/* Bottom bar */}
-        <div
-          style={{ borderTopColor: tokens.color.neutral[800] }}
-          className="flex flex-col items-center justify-between gap-4 border-t py-8 sm:flex-row"
-        >
-          <p style={{ fontSize: tokens.typography.fontSize.xs }}>
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-neutral-800 py-8 sm:flex-row">
+          <p className="text-xs">
             &copy; {currentYear} {copyrightName}. All rights reserved.
           </p>
 
@@ -108,8 +82,7 @@ export default function Footer({
                 <Link
                   key={link.href}
                   href={link.href}
-                  style={{ fontSize: tokens.typography.fontSize.xs }}
-                  className="transition-colors hover:text-white"
+                  className="text-xs transition-colors hover:text-white"
                 >
                   {link.label}
                 </Link>
