@@ -341,7 +341,7 @@
       // 3 smaller cards below
       const sy = fy + fH + 24;
       const w = colW(3);
-      for (let i = 0; i < 3; i++) addCard(c, PAD + i * (w + GAP), sy, w, { ...CARD_L, imgH: 120 });
+      for (let i = 0; i < 3; i++) addCard(c, PAD + i * (w + GAP), sy, w, Object.assign({}, CARD_L, { imgH: 120 }));
       return c;
     }
 
@@ -394,7 +394,7 @@
       const w = colW(3);
       const heights = [240, 120, 180];
       for (let i = 0; i < 3; i++) {
-        addCard(c, PAD + i * (w + GAP), ny + 40, w, { ...CARD_L, imgH: heights[i] });
+        addCard(c, PAD + i * (w + GAP), ny + 40, w, Object.assign({}, CARD_L, { imgH: heights[i] }));
       }
       return c;
     }
@@ -602,10 +602,10 @@
     };
 
     const footerSet = figma.combineAsVariants([
-      createFooter("Theme=Dark, Columns=3",  { ...FT_D, cols: 3 }),
-      createFooter("Theme=Dark, Columns=2",  { ...FT_D, cols: 2 }),
-      createFooter("Theme=Light, Columns=3", { ...FT_L, cols: 3 }),
-      createFooter("Theme=Light, Columns=2", { ...FT_L, cols: 2 }),
+      createFooter("Theme=Dark, Columns=3",  Object.assign({}, FT_D, { cols: 3 })),
+      createFooter("Theme=Dark, Columns=2",  Object.assign({}, FT_D, { cols: 2 })),
+      createFooter("Theme=Light, Columns=3", Object.assign({}, FT_L, { cols: 3 })),
+      createFooter("Theme=Light, Columns=2", Object.assign({}, FT_L, { cols: 2 })),
     ], figma.currentPage);
     footerSet.name = "Footer";
     placeSet(footerSet);
