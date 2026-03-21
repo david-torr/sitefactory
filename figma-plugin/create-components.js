@@ -33,7 +33,7 @@
     // ── Helpers ───────────────────────────────────────────────────────
 
     function applyFill(node, color, opacity) {
-      node.fills = [{ type: "SOLID", color, opacity: opacity ?? 1 }];
+      node.fills = [{ type: "SOLID", color, opacity: opacity !== undefined ? opacity : 1 }];
     }
 
     function txt(content, size, style, color, opacity) {
@@ -253,7 +253,7 @@
 
     /** Standard card with image/title/body/CTA. Returns card height. */
     function addCard(parent, x, y, w, o) {
-      const cardH = o.imgH + 200;
+      const cardH = o.imgH + 140;
       const bg = rect(w, cardH, o.cardBg);
       bg.cornerRadius = 8;
       add(parent, bg, x, y);
