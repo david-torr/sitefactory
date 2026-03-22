@@ -2,6 +2,20 @@
 // Creates component sets with variants for Nav, Hero, Content Block, Object Block, Footer.
 (async () => {
   try {
+    // ── Page setup: create/reuse "Components" page ──────────────────
+    var componentsPage = figma.root.children.find(function(p) { return p.name === "Components"; });
+    if (!componentsPage) {
+      componentsPage = figma.createPage();
+      componentsPage.name = "Components";
+    }
+    figma.currentPage = componentsPage;
+    // Remove existing component sets with matching names
+    var namesToClear = ["Nav", "Hero", "Content Block", "Object Block", "Footer"];
+    var existingChildren = componentsPage.children.slice();
+    for (var ci = 0; ci < existingChildren.length; ci++) {
+      if (namesToClear.indexOf(existingChildren[ci].name) !== -1) existingChildren[ci].remove();
+    }
+    // ── Font loading ──────────────────────────────────────────────────
     await figma.loadFontAsync({ family: "DM Sans", style: "Regular" });
     await figma.loadFontAsync({ family: "DM Sans", style: "Medium" });
     await figma.loadFontAsync({ family: "DM Sans", style: "SemiBold" });
