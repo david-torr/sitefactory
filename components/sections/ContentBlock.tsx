@@ -18,6 +18,16 @@ export interface ContentItem {
   video?: StrapiVideo;
 }
 
+export interface ArticleItem {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  cover?: { url: string; formats?: { medium?: { url: string } } };
+  category?: string;
+  publishedAt?: string;
+}
+
 export interface ContentBlockProps {
   name: string;
   title?: string;
@@ -26,12 +36,16 @@ export interface ContentBlockProps {
   backgroundColour?: string;
   backgroundImage?: StrapiMedia;
   theme?: "light" | "dark";
-  style?: "card" | "list" | "carousel" | "masonry";
+  style?: "card" | "list" | "carousel" | "masonry" | "tile" | "media_text";
   columns?: number;
-  layout?: "grid" | "alternating" | "featured";
+  layout?: "grid" | "alternating" | "featured" | "stack" | "scroll" | "carousel";
   carouselInterval?: number;
   link?: StrapiLink;
   items?: ContentItem[];
+  /** Page-builder articles — converted to ContentItems internally */
+  articles?: ArticleItem[];
+  /** Media/text alternation direction */
+  mediaAlignment?: "left" | "right";
 }
 
 // ─── Column grid class map ────────────────────────────────────────────────────
@@ -103,7 +117,7 @@ function LinkButton({ link, variant, isDark }: LinkButtonProps) {
 
   const variantClass =
     variant === "primary"
-      ? "bg-accent text-white rounded-md text-sm font-semibold tracking-wide"
+      ? "bg-neutral-900 text-white rounded-md text-sm font-semibold"
       : `border rounded-md text-sm font-medium ${
           isDark
             ? "border-neutral-500 text-neutral-200"
@@ -115,7 +129,7 @@ function LinkButton({ link, variant, isDark }: LinkButtonProps) {
       href={link.url}
       target={link.openInNewTab ? "_blank" : undefined}
       rel={link.openInNewTab ? "noopener noreferrer" : undefined}
-      className={`inline-flex items-center px-5 py-2.5 transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${variantClass}`}
+      className={`inline-flex w-auto items-center px-5 py-2.5 transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${variantClass}`}
     >
       {link.label}
     </a>
@@ -425,6 +439,76 @@ function SectionHeader({ title, subtitle, alignment, isDark, link }: SectionHead
 
 // ─── ContentBlock ─────────────────────────────────────────────────────────────
 
+// ─── Media-text row ──────────────────────────────────────────────────────────
+
+interface MediaTextRowProps {
+  article: ArticleItem;
+  index: number;
+  defaultMediaSide: "left" | "right";
+  isDark: boolean;
+}
+
+function MediaTextRow({ article, index, defaultMediaSide, isDark }: MediaTextRowProps) {
+  const mediaSide = index % 2 === 0 ? defaultMediaSide : (defaultMediaSide === "left" ? "right" : "left");
+  const titleClass = isDark ? "text-neutral-100" : "text-primary";
+  const bodyClass = isDark ? "text-neutral-400" : "text-neutral-500";
+  const coverUrl = article.cover?.formats?.medium?.url ?? article.cover?.url;
+
+  return (
+    <article
+      className={`flex flex-col md:flex-row ${mediaSide === "right" ? "md:flex-row-reverse" : ""}`}
+    >
+      {/* Image half */}
+      <div className="w-full md:w-1/2">
+        {coverUrl ? (
+          <img
+            src={coverUrl}
+            alt={article.title}
+            className="h-full min-h-[480px] w-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex h-full min-h-[480px] w-full items-center justify-center bg-neutral-200" />
+        )}
+      </div>
+      {/* Text half */}
+      <div className="flex w-full flex-col justify-center px-8 py-12 md:w-1/2 md:px-16 md:py-20">
+        {article.category && (
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-500">
+            {article.category}
+          </p>
+        )}
+        <h3 className={`mb-4 font-display text-3xl font-bold ${titleClass}`}>
+          {article.title}
+        </h3>
+        {article.excerpt && (
+          <p className={`mb-8 max-w-md text-base leading-relaxed ${bodyClass}`}>
+            {article.excerpt}
+          </p>
+        )}
+        {article.slug && (
+          <a
+            href={`/${article.slug}`}
+            className={`text-sm font-semibold ${isDark ? "text-neutral-200" : "text-neutral-800"}`}
+          >
+            Explore &rarr;
+          </a>
+        )}
+      </div>
+    </article>
+  );
+}
+
+// ─── Scroll layout ───────────────────────────────────────────────────────────
+
+function ScrollLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide" style={{ scrollSnapType: "x mandatory" }}>
+      {children}
+    </div>
+  );
+}
+
 export default function ContentBlock({
   title,
   subtitle,
@@ -438,8 +522,19 @@ export default function ContentBlock({
   carouselInterval = 4000,
   link,
   items,
+  articles,
+  mediaAlignment = "left",
 }: ContentBlockProps) {
-  if (!items || items.length === 0) return <ContentBlockSkeleton />;
+  // Convert articles to ContentItems if provided and no items given
+  const resolvedItems: ContentItem[] | undefined = items ?? articles?.map((a) => ({
+    name: a.slug,
+    title: a.title,
+    blurb: a.excerpt,
+    image: a.cover ? { url: a.cover.formats?.medium?.url ?? a.cover.url } : undefined,
+    primaryLink: a.slug ? { label: "View", url: `/${a.slug}` } : undefined,
+  }));
+
+  if ((!resolvedItems || resolvedItems.length === 0) && (!articles || articles.length === 0)) return <ContentBlockSkeleton />;
 
   const isDark = theme === "dark";
   const safeColumns = Math.max(1, Math.min(6, columns)) as keyof typeof gridColsClass;
@@ -448,8 +543,53 @@ export default function ContentBlock({
   // ── Render items ──────────────────────────────────────────────────────────
 
   const renderItems = () => {
-    if (style === "carousel") {
-      return <CarouselView items={items} interval={carouselInterval} theme={theme} />;
+    // media_text style: handled separately in the section return below
+    if (style === "media_text") return null;
+
+    // tile style: icon-driven flat cards (like ObjectBlock)
+    if (style === "tile" && resolvedItems) {
+      return (
+        <div className={`grid gap-6 ${gridColsClass[safeColumns] ?? gridColsClass[3]}`}>
+          {resolvedItems.map((item) => {
+            const itemDark = (item.themeOverride ?? theme) === "dark";
+            const titleClass = itemDark ? "text-neutral-100" : "text-primary";
+            const bodyClass = itemDark ? "text-neutral-400" : "text-neutral-600";
+            return (
+              <article
+                key={item.name}
+                className={`flex flex-col items-center gap-3 rounded-xl p-8 text-center font-body ${
+                  itemDark ? "bg-neutral-800" : "bg-background"
+                }`}
+              >
+                <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${
+                  itemDark ? "bg-neutral-700" : "bg-neutral-200"
+                }`} />
+                {item.title && <h3 className={`font-display text-lg font-semibold ${titleClass}`}>{item.title}</h3>}
+                {item.blurb && <p className={`text-sm leading-relaxed ${bodyClass}`}>{item.blurb}</p>}
+              </article>
+            );
+          })}
+        </div>
+      );
+    }
+
+    if (!resolvedItems || resolvedItems.length === 0) return null;
+
+    // scroll layout: horizontal scroll container
+    if (layout === "scroll") {
+      return (
+        <ScrollLayout>
+          {resolvedItems.map((item) => (
+            <div key={item.name} className="w-80 shrink-0" style={{ scrollSnapAlign: "start" }}>
+              <ContentItemCard item={item} blockTheme={theme} />
+            </div>
+          ))}
+        </ScrollLayout>
+      );
+    }
+
+    if (style === "carousel" || layout === "carousel") {
+      return <CarouselView items={resolvedItems} interval={carouselInterval} theme={theme} />;
     }
 
     if (style === "list") {
@@ -459,7 +599,7 @@ export default function ContentBlock({
             isDark ? "divide-neutral-700" : "divide-neutral-200"
           }`}
         >
-          {items.map((item) => (
+          {resolvedItems.map((item) => (
             <ContentItemRow key={item.name} item={item} blockTheme={theme} />
           ))}
         </div>
@@ -469,7 +609,7 @@ export default function ContentBlock({
     if (style === "masonry") {
       return (
         <div style={{ columns: `${safeColumns}`, columnGap: "1.5rem" }}>
-          {items.map((item) => (
+          {resolvedItems.map((item) => (
             <div key={item.name} className="mb-6 break-inside-avoid">
               <ContentItemCard item={item} blockTheme={theme} />
             </div>
@@ -481,7 +621,7 @@ export default function ContentBlock({
     if (layout === "alternating") {
       return (
         <div className="flex flex-col gap-16">
-          {items.map((item, i) => {
+          {resolvedItems.map((item, i) => {
             const isEven = i % 2 === 0;
             const isDarkItem = (item.themeOverride ?? theme) === "dark";
             const titleClass = isDarkItem ? "text-neutral-100" : "text-primary";
@@ -546,7 +686,7 @@ export default function ContentBlock({
     }
 
     if (layout === "featured") {
-      const [featured, ...rest] = items;
+      const [featured, ...rest] = resolvedItems;
       const isDarkFeatured = (featured.themeOverride ?? theme) === "dark";
       const titleClass = isDarkFeatured ? "text-neutral-100" : "text-primary";
       const bodyClass = isDarkFeatured ? "text-neutral-400" : "text-neutral-600";
@@ -617,10 +757,10 @@ export default function ContentBlock({
       );
     }
 
-    // Default: grid
+    // Default: grid (stack)
     return (
       <div className={`grid gap-6 ${gridColsClass[safeColumns] ?? gridColsClass[3]}`}>
-        {items.map((item) => (
+        {resolvedItems.map((item) => (
           <ContentItemCard key={item.name} item={item} blockTheme={theme} />
         ))}
       </div>
@@ -653,6 +793,37 @@ export default function ContentBlock({
         </>
       )}
 
+      {/* media_text: edge-to-edge layout with section header inside container */}
+      {style === "media_text" && articles && articles.length > 0 && (
+        <>
+          {(title || subtitle) && (
+            <div className="relative px-4 pt-16 sm:px-6 sm:pt-20 lg:px-8 lg:pt-24">
+              <div className="mx-auto max-w-7xl">
+                <SectionHeader
+                  title={title}
+                  subtitle={subtitle}
+                  alignment={titleAlignment}
+                  isDark={isDark}
+                />
+              </div>
+            </div>
+          )}
+          <div className="relative">
+            {articles.map((article, i) => (
+              <MediaTextRow
+                key={article.id}
+                article={article}
+                index={i}
+                defaultMediaSide={mediaAlignment}
+                isDark={isDark}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Standard layout: items inside max-w container */}
+      {style !== "media_text" && (
       <div className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
@@ -660,13 +831,12 @@ export default function ContentBlock({
             subtitle={subtitle}
             alignment={titleAlignment}
             isDark={isDark}
-            link={link}
           />
 
           {renderItems()}
 
-          {/* Section-level CTA link rendered below items when not in the header */}
-          {link?.url && link?.label && (title || subtitle) && (
+          {/* Section-level CTA link rendered below items */}
+          {link?.url && link?.label && (
             <div className="mt-12 flex justify-center">
               <a
                 href={link.url}
@@ -695,6 +865,7 @@ export default function ContentBlock({
           )}
         </div>
       </div>
+      )}
     </section>
   );
 }

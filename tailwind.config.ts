@@ -17,8 +17,8 @@ const config: Config = {
         neutral: tokens.colors.neutral,
       },
       fontFamily: {
-        display: [tokens.typography.fontFamily.display, "serif"],
-        body: [tokens.typography.fontFamily.body, "sans-serif"],
+        display: ["var(--font-dm-sans)", tokens.typography.fontFamily.display, "sans-serif"],
+        body: ["var(--font-dm-sans)", tokens.typography.fontFamily.body, "sans-serif"],
       },
     },
   },

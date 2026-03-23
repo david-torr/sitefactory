@@ -15,6 +15,14 @@ export interface ObjectItem {
   secondaryButtonLink?: StrapiLink;
 }
 
+export interface ArticleItem {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  category?: string;
+}
+
 export interface ObjectBlockProps {
   name: string;
   title?: string;
@@ -24,10 +32,12 @@ export interface ObjectBlockProps {
   backgroundImage?: StrapiMedia;
   theme?: "light" | "dark";
   columns?: number;
-  layout?: "grid" | "alternating" | "carousel";
+  layout?: "grid" | "alternating" | "carousel" | "stack" | "scroll";
   carouselInterval?: number;
   link?: StrapiLink;
   items?: ObjectItem[];
+  /** Page-builder articles — converted to ObjectItems internally */
+  articles?: ArticleItem[];
 }
 
 // ─── Column grid class map ────────────────────────────────────────────────────
@@ -136,13 +146,11 @@ function ObjectItemCard({ item, blockTheme, centered = false }: ObjectItemCardPr
   return (
     <article
       className={`flex h-full flex-col gap-4 rounded-xl p-6 font-body ${alignClass} ${
-        isDark ? "bg-neutral-800" : "bg-background"
+        isDark ? "bg-neutral-800" : "bg-background border border-neutral-200"
       }`}
       style={{
         ...(item.backgroundColour ? { backgroundColor: item.backgroundColour } : {}),
-        boxShadow: isDark
-          ? "0 1px 3px rgba(0,0,0,0.30)"
-          : "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
+        ...(isDark ? {} : { boxShadow: "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)" }),
       }}
     >
       {/* Icon */}
@@ -457,8 +465,16 @@ export default function ObjectBlock({
   carouselInterval = 4000,
   link,
   items,
+  articles,
 }: ObjectBlockProps) {
-  if (!items || items.length === 0) return <ObjectBlockSkeleton />;
+  // Convert articles to ObjectItems if provided and no items given
+  const resolvedItems: ObjectItem[] | undefined = items ?? articles?.map((a) => ({
+    name: a.slug,
+    title: a.title,
+    blurb: a.excerpt,
+  }));
+
+  if (!resolvedItems || resolvedItems.length === 0) return <ObjectBlockSkeleton />;
 
   const isDark = theme === "dark";
   const safeColumns = Math.max(1, Math.min(6, columns)) as keyof typeof gridColsClass;
@@ -466,13 +482,13 @@ export default function ObjectBlock({
 
   const renderItems = () => {
     if (layout === "carousel") {
-      return <CarouselView items={items} interval={carouselInterval} theme={theme} />;
+      return <CarouselView items={resolvedItems} interval={carouselInterval} theme={theme} />;
     }
 
     if (layout === "alternating") {
       return (
         <div className="flex flex-col gap-16">
-          {items.map((item, i) => (
+          {resolvedItems.map((item, i) => (
             <AlternatingRow key={item.name} item={item} index={i} blockTheme={theme} />
           ))}
         </div>
@@ -483,7 +499,7 @@ export default function ObjectBlock({
     const isCentered = titleAlignment === "center";
     return (
       <div className={`grid gap-6 ${gridColsClass[safeColumns] ?? gridColsClass[3]}`}>
-        {items.map((item) => (
+        {resolvedItems.map((item) => (
           <ObjectItemCard
             key={item.name}
             item={item}

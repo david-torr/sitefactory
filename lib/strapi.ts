@@ -3,6 +3,7 @@
  * Uses STRAPI_URL and STRAPI_API_TOKEN environment variables.
  */
 
+import type { PageType } from "@/types/page-builder";
 import type { HeroHeaderProps, HeroSlide, LinkBarItem } from "@/components/sections/HeroHeader";
 import type { ContentBlockProps, ContentItem } from "@/components/sections/ContentBlock";
 import type { ObjectBlockProps, ObjectItem } from "@/components/sections/ObjectBlock";
@@ -194,4 +195,202 @@ export async function getStandardHeaders(): Promise<StandardHeaderProps[]> {
       contentAlignment: a.contentAlignment,
     };
   });
+}
+
+// ─── Page builder fetcher ────────────────────────────────────────────────────
+
+export async function getPage(slug: string): Promise<PageType | null> {
+  try {
+    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL ?? STRAPI_URL;
+    const url = `${strapiUrl}/api/pages?` +
+      `filters[slug][$eq]=${slug}` +
+      `&populate[sections][populate][articles][populate]=cover` +
+      `&populate[sections][populate][items][populate]=background_image` +
+      `&populate[sections][populate][items][populate]=cta_primary` +
+      `&populate[sections][populate][items][populate]=cta_secondary` +
+      `&populate[sections][populate][link_bar_items][populate]=icon` +
+      `&populate[sections][populate][link_bar_items][populate]=link` +
+      `&populate[sections][populate][nav_items]=*` +
+      `&populate[sections][populate][cta_link]=*` +
+      `&populate[sections][populate][logo_default]=*` +
+      `&populate[sections][populate][logo_scrolled]=*` +
+      `&populate[sections][populate][logo]=*` +
+      `&populate[sections][populate][nav_columns][populate]=links` +
+      `&populate[sections][populate][legal_links]=*`;
+
+    const res = await fetch(url, { next: { revalidate: 60 } });
+    if (!res.ok) return getMockPage(slug);
+    const json = await res.json();
+    const raw = json?.data?.[0];
+    if (!raw) return getMockPage(slug);
+
+    return {
+      id: raw.id,
+      ...raw.attributes,
+      sections: (raw.attributes.sections || []).map((s: any) => ({
+        ...s,
+        articles: s.articles?.data?.map((a: any) => ({
+          id: a.id,
+          ...a.attributes,
+          cover: a.attributes.cover?.data ? {
+            url: a.attributes.cover.data.attributes.url,
+            formats: a.attributes.cover.data.attributes.formats
+          } : undefined
+        })) ?? s.articles ?? []
+      }))
+    };
+  } catch {
+    return getMockPage(slug);
+  }
+}
+
+function getMockPage(slug: string): PageType | null {
+  if (slug !== 'home') return null;
+  return {
+    id: 1,
+    title: 'Home',
+    slug: 'home',
+    sections: [
+      {
+        __component: 'sections.site-nav',
+        display_mode: 'overlay',
+        theme: 'dark',
+        scroll_behaviour: 'become_solid',
+        scrolled_bg_colour: '#ffffff',
+        scrolled_theme: 'light',
+        cta_label: 'Get started',
+        cta_link: { label: 'Get started', url: '#' },
+        nav_items: [
+          { label: 'Solutions', url: '#' },
+          { label: 'Work', url: '#' },
+          { label: 'About', url: '#' },
+          { label: 'Blog', url: '#' }
+        ]
+      },
+      {
+        __component: 'sections.hero-header',
+        name: 'Main Hero',
+        header_type: 'hero',
+        carousel_speed: 'slow',
+        content_alignment: 'left',
+        vertical_alignment: 'middle',
+        items: [
+          {
+            title: 'Design beyond expectation.',
+            description: 'We partner with ambitious brands to create digital experiences that define categories and move markets.',
+            theme: 'dark',
+            cta_primary: { label: 'See our work', url: '#' },
+            cta_secondary: { label: 'Talk to us', url: '#' }
+          },
+          {
+            title: 'Built for performance at scale.',
+            description: 'From early-stage startups to global enterprises, we bring precision engineering to every product we ship.',
+            theme: 'dark',
+            cta_primary: { label: 'Our approach', url: '#' }
+          },
+          {
+            title: 'Where craft meets strategy.',
+            description: 'The best products live at the intersection of beautiful design and rigorous, evidence-based thinking.',
+            theme: 'dark',
+            cta_primary: { label: 'Start a project', url: '#' },
+            cta_secondary: { label: 'View case studies', url: '#' }
+          }
+        ],
+        link_bar: true,
+        link_bar_bg: '#f5f5f5',
+        link_bar_items: [
+          { label: 'Brand Identity', subtitle: 'Positioning, identity & design systems' },
+          { label: 'Web & Product', subtitle: 'Next.js, React & mobile applications' },
+          { label: 'Growth Strategy', subtitle: 'Analytics, SEO & performance marketing' }
+        ]
+      },
+      {
+        __component: 'sections.content-block',
+        name: 'Selected Work',
+        title: 'Selected work',
+        subtitle: 'Recent projects across brand, digital, and product strategy.',
+        title_alignment: 'left',
+        background: 'colour',
+        bg_colour: '#ffffff',
+        theme: 'light',
+        style: 'card',
+        media_alignment: 'left',
+        columns: '3',
+        layout: 'stack',
+        articles: [
+          { id: 1, title: 'Apex Financial — Brand Overhaul', slug: 'apex', excerpt: 'Complete brand refresh for a Series B fintech.', category: 'Brand Identity' },
+          { id: 2, title: 'Orbit — Logistics Platform', slug: 'orbit', excerpt: 'End-to-end design for a real-time logistics dashboard.', category: 'Web & Product' },
+          { id: 3, title: 'Vessel — Luxury E-commerce', slug: 'vessel', excerpt: 'Custom Shopify storefront for a luxury brand.', category: 'Growth Strategy' }
+        ]
+      },
+      {
+        __component: 'sections.content-block',
+        name: 'Our Stages',
+        title: 'Our stages',
+        subtitle: 'Each space designed for a different kind of experience.',
+        title_alignment: 'left',
+        background: 'colour',
+        bg_colour: '#fafafa',
+        theme: 'light',
+        style: 'media_text',
+        media_alignment: 'left',
+        columns: '1',
+        layout: 'stack',
+        articles: [
+          { id: 4, title: 'The Main Stage', slug: 'main-stage', excerpt: 'Our flagship 2,000-seat auditorium, designed for grand-scale productions with state-of-the-art acoustics.', category: 'Explore the space' },
+          { id: 5, title: 'Studio Theatre', slug: 'studio', excerpt: 'An intimate 350-seat black box venue for experimental and emerging works.', category: 'Explore the space' }
+        ]
+      },
+      {
+        __component: 'sections.object-block',
+        name: 'What We Do',
+        title: 'What we do',
+        subtitle: 'End-to-end capabilities across the full digital product lifecycle.',
+        title_alignment: 'centre',
+        background: 'colour',
+        bg_colour: '#171717',
+        theme: 'dark',
+        columns: '3',
+        layout: 'stack',
+        articles: [
+          { id: 1, title: 'Brand Strategy', slug: 'brand', excerpt: 'Define your market position, tone of voice, and visual identity with a cohesive brand system built to scale.', category: 'Brand' },
+          { id: 2, title: 'Product Design', slug: 'design', excerpt: 'User research, interaction design, prototyping, and design systems that put people at the centre.', category: 'Design' },
+          { id: 3, title: 'Web Development', slug: 'web', excerpt: 'High-performance Next.js applications with clean architecture, accessibility built in.', category: 'Tech' },
+          { id: 4, title: 'Content Strategy', slug: 'content', excerpt: 'Purposeful content frameworks that attract the right audience and drive meaningful action.', category: 'Content' },
+          { id: 5, title: 'Growth Marketing', slug: 'growth', excerpt: 'Data-driven acquisition and retention programmes across paid, organic, and lifecycle channels.', category: 'Growth' },
+          { id: 6, title: 'Analytics & Insights', slug: 'analytics', excerpt: 'Measurement infrastructure, dashboards, and regular reporting so you always know what\'s working.', category: 'Analytics' }
+        ]
+      },
+      {
+        __component: 'sections.footer-block',
+        name: 'Footer',
+        copyright_text: '\u00A9 2026 Forma Studio Ltd. All rights reserved.',
+        nav_columns: [
+          { title: 'Work', links: [
+            { label: 'Case Studies', url: '#' },
+            { label: 'Our Process', url: '#' },
+            { label: 'Results', url: '#' },
+            { label: 'Testimonials', url: '#' }
+          ]},
+          { title: 'Studio', links: [
+            { label: 'About', url: '#' },
+            { label: 'Team', url: '#' },
+            { label: 'Careers', url: '#' },
+            { label: 'Press', url: '#' }
+          ]},
+          { title: 'Connect', links: [
+            { label: 'Blog', url: '#' },
+            { label: 'Newsletter', url: '#' },
+            { label: 'Contact', url: '#' },
+            { label: 'LinkedIn', url: '#' }
+          ]}
+        ],
+        legal_links: [
+          { label: 'Privacy Policy', url: '/privacy-policy' },
+          { label: 'Terms of Service', url: '/terms' },
+          { label: 'Cookies', url: '/cookies' }
+        ]
+      }
+    ]
+  };
 }
