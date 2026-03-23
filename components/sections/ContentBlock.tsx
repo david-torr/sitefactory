@@ -117,8 +117,8 @@ function LinkButton({ link, variant, isDark }: LinkButtonProps) {
 
   const variantClass =
     variant === "primary"
-      ? "bg-neutral-900 text-white rounded-md text-sm font-semibold"
-      : `border rounded-md text-sm font-medium ${
+      ? "bg-[var(--color-btn-bg)] text-[var(--color-btn-text)] rounded-button text-label"
+      : `border rounded-button text-label ${
           isDark
             ? "border-neutral-500 text-neutral-200"
             : "border-neutral-300 text-neutral-700"
@@ -154,17 +154,14 @@ function ContentItemCard({ item, blockTheme, compact = false }: ContentItemCardP
 
   return (
     <article
-      className={`flex h-full flex-col overflow-hidden rounded-lg font-body ${
-        isDark ? "bg-neutral-800" : "bg-background"
+      className={`flex h-full flex-col overflow-hidden rounded-card font-body ${
+        isDark ? "bg-neutral-800" : "bg-background border border-[var(--color-border)]"
       }`}
-      style={{
-        ...(item.bgColour ? { backgroundColor: item.bgColour } : {}),
-        boxShadow: "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
-      }}
+      style={item.bgColour ? { backgroundColor: item.bgColour } : undefined}
     >
       {/* Media */}
       {hasMedia && (
-        <div className={`w-full overflow-hidden ${compact ? "h-36" : "h-52"} shrink-0`}>
+        <div className={`w-full overflow-hidden ${compact ? "h-36" : "aspect-[4/3]"} shrink-0`}>
           {videoSrc ? (
             <video
               src={videoSrc}
@@ -189,12 +186,12 @@ function ContentItemCard({ item, blockTheme, compact = false }: ContentItemCardP
       {/* Body */}
       <div className={`flex flex-1 flex-col gap-3 p-5 ${textAlignClass[alignment]}`}>
         {item.title && (
-          <h3 className={`font-display text-lg font-semibold leading-snug ${titleClass}`}>
+          <h3 className={`font-display text-h3 ${titleClass}`}>
             {item.title}
           </h3>
         )}
         {item.blurb && (
-          <p className={`text-sm leading-relaxed ${bodyClass}`}>
+          <p className={`text-body-sm text-[var(--color-text-secondary)]`}>
             {item.blurb}
           </p>
         )}
@@ -412,13 +409,13 @@ function SectionHeader({ title, subtitle, alignment, isDark, link }: SectionHead
     >
       {title && (
         <h2
-          className={`font-display text-3xl font-bold leading-tight tracking-tight ${titleClass}`}
+          className={`font-display text-h2 tracking-tight ${titleClass}`}
         >
           {title}
         </h2>
       )}
       {subtitle && (
-        <p className={`mt-3 text-lg leading-relaxed ${bodyClass}`}>{subtitle}</p>
+        <p className={`mt-3 text-body-lg ${bodyClass}`}>{subtitle}</p>
       )}
       {link?.url && link?.label && (
         <div
@@ -797,7 +794,7 @@ export default function ContentBlock({
       {style === "media_text" && articles && articles.length > 0 && (
         <>
           {(title || subtitle) && (
-            <div className="relative px-4 pt-16 sm:px-6 sm:pt-20 lg:px-8 lg:pt-24">
+            <div className="relative px-6 pt-space-16 lg:px-space-20">
               <div className="mx-auto max-w-7xl">
                 <SectionHeader
                   title={title}
@@ -824,7 +821,7 @@ export default function ContentBlock({
 
       {/* Standard layout: items inside max-w container */}
       {style !== "media_text" && (
-      <div className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+      <div className="relative px-6 py-space-16 lg:px-space-20">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             title={title}

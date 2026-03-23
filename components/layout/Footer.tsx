@@ -67,10 +67,10 @@ export default function Footer({
   );
 
   return (
-    <footer className="bg-neutral-900 font-body text-neutral-400">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <footer className="bg-[var(--color-footer-bg)] font-body text-[var(--color-text-secondary)]">
+      <div className="mx-auto max-w-7xl px-6 lg:px-space-20">
         {/* Main footer content */}
-        <div className="py-16">
+        <div className="py-space-16">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
             {/* Brand column */}
             <div className="lg:col-span-4">
@@ -78,7 +78,7 @@ export default function Footer({
                 {resolvedLogo}
               </Link>
               {tagline && (
-                <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-400">
+                <p className="mt-4 max-w-xs text-body-sm text-[var(--color-text-secondary)]">
                   {tagline}
                 </p>
               )}
@@ -88,7 +88,7 @@ export default function Footer({
             <div className="grid grid-cols-2 gap-8 lg:col-span-8 lg:grid-cols-3">
               {resolvedGroups.map((group) => (
                 <div key={group.heading}>
-                  <h3 className="font-display text-xs font-semibold uppercase tracking-widest text-neutral-100">
+                  <h3 className="font-display text-caption uppercase tracking-widest text-[var(--color-text-secondary)]">
                     {group.heading}
                   </h3>
                   <ul className="mt-4 space-y-3">
@@ -96,7 +96,7 @@ export default function Footer({
                       <li key={link.href}>
                         <Link
                           href={link.href}
-                          className="text-sm transition-colors hover:text-white"
+                          className="text-body-sm text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-inverse)]"
                         >
                           {link.label}
                         </Link>
@@ -110,13 +110,13 @@ export default function Footer({
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-neutral-800 py-8 sm:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-[#FFFFFF1A] py-8 sm:flex-row">
           <div>
-            <p className="text-xs">
+            <p className="text-body-sm text-[var(--color-text-secondary)]">
               {copyrightText ?? `\u00A9 ${currentYear} ${copyrightName}. All rights reserved.`}
             </p>
             {acknowledgementOfCountry && (
-              <p className="mt-2 text-xs text-neutral-500">{acknowledgementOfCountry}</p>
+              <p className="mt-2 text-body-sm text-[var(--color-text-secondary)]">{acknowledgementOfCountry}</p>
             )}
           </div>
 
@@ -126,7 +126,7 @@ export default function Footer({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs transition-colors hover:text-white"
+                  className="text-body-sm text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-inverse)]"
                 >
                   {link.label}
                 </Link>

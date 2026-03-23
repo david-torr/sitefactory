@@ -3,19 +3,91 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #FFFFFF;
   --foreground: #171717;
-}
 
+  /* Backgrounds & Surfaces */
+  --color-background: #FFFFFF;
+  --color-surface: #FAFAFA;
+  --color-surface-alt: #F5F5F5;
+  --color-surface-inverse: #171717;
+  --color-surface-raised: #262626;
+  --color-border: #E5E5E5;
+
+  /* Text */
+  --color-text-primary: #171717;
+  --color-text-secondary: #737373;
+  --color-text-inverse: #FFFFFF;
+  --color-text-disabled: #A3A3A3;
+
+  /* Brand */
+  --color-brand-primary: #000000;
+  --color-brand-secondary: #FFFFFF;
+  --color-brand-accent: #000000;
+  --brand-default: #000000;
+
+  /* Buttons */
+  --color-btn-bg: #000000;
+  --color-btn-text: #FFFFFF;
+  --color-btn-bg-outline: transparent;
+  --color-btn-text-outline: #171717;
+
+  /* Section contexts */
+  --color-nav-bg: #FFFFFF;
+  --color-hero-bg: #171717;
+  --color-ticker-bg: #F5F5F5;
+  --color-card-bg-dark: #262626;
+  --color-footer-bg: #171717;
+
+  /* Spacing */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px; --space-16: 64px; --space-20: 80px;
+
+  /* Radius */
+  --radius-none: 0px; --radius-sm: 2px; --radius-base: 4px;
+  --radius-md: 6px; --radius-lg: 8px; --radius-xl: 12px;
+  --radius-2xl: 16px; --radius-full: 9999px;
+  --radius-button: 6px;
+  --radius-card: 8px;
+}
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+}
+
+@layer base {
+  h1 {
+    font-size: 60px;
+    font-weight: 700;
+    line-height: 1;
+    font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  }
+  h2 {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
