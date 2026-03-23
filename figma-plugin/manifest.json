@@ -1,0 +1,7 @@
+{
+  "name": "Site Factory — Create Components",
+  "id": "site-factory-components",
+  "api": "1.0.0",
+  "main": "create-components.js",
+  "editorType": ["figma"]
+}
