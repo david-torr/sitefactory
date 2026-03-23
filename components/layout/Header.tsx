@@ -65,7 +65,7 @@ export default function Header({
   const textClass = isDark ? "text-white" : "text-neutral-900";
   const linkClass = isDark
     ? "text-neutral-200 hover:text-white"
-    : "text-neutral-600 hover:text-black";
+    : "text-neutral-600 hover:text-neutral-900";
   const hamburgerBg = isDark ? "bg-white" : "bg-neutral-900";
 
   const bgStyle: React.CSSProperties = {};
@@ -99,7 +99,7 @@ export default function Header({
       }`}
       style={bgStyle}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-12">
         {/* Logo */}
         <div className="flex shrink-0 items-center">
           <Link href="/" aria-label="Home">
@@ -113,7 +113,7 @@ export default function Header({
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium tracking-wide transition-colors ${linkClass}`}
+              className={`text-label tracking-wide transition-colors ${linkClass}`}
             >
               {link.label}
             </Link>
@@ -125,10 +125,10 @@ export default function Header({
           {ctaLabel && ctaHref && (
             <Link
               href={ctaHref}
-              className={`hidden rounded-md px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80 md:inline-flex ${
+              className={`hidden rounded-button px-5 py-2.5 text-label transition-opacity hover:opacity-80 md:inline-flex ${
                 isDark
                   ? "bg-white text-neutral-900"
-                  : "bg-accent text-white"
+                  : "bg-[var(--color-btn-bg)] text-[var(--color-btn-text)]"
               }`}
             >
               {ctaLabel}
@@ -187,7 +187,7 @@ export default function Header({
                 <Link
                   href={ctaHref}
                   onClick={() => setMenuOpen(false)}
-                  className="inline-flex rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-80"
+                  className="inline-flex rounded-button bg-[var(--color-btn-bg)] px-5 py-2.5 text-label text-[var(--color-btn-text)] transition-opacity hover:opacity-80"
                 >
                   {ctaLabel}
                 </Link>

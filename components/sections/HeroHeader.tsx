@@ -149,14 +149,14 @@ function Slide({ slide, defaultAlignment, defaultVertical }: SlideProps) {
 
       {/* Slide content */}
       <div
-        className={`relative flex h-full flex-col px-6 sm:px-10 md:px-16 lg:px-24 ${verticalJustifyClass[defaultVertical]}`}
+        className={`relative flex h-full flex-col px-6 sm:px-10 md:px-16 lg:px-space-20 ${verticalJustifyClass[defaultVertical]}`}
       >
         <div
           className={`flex max-w-3xl flex-col gap-5 font-body ${alignItemsClass[alignment]}`}
         >
           {slide.title && (
             <h1
-              className={`font-display text-5xl font-bold leading-tight tracking-tight sm:text-6xl ${titleClass}`}
+              className={`font-display text-4xl font-bold leading-none tracking-tight sm:text-h1 ${titleClass}`}
             >
               {slide.title}
             </h1>
@@ -164,7 +164,7 @@ function Slide({ slide, defaultAlignment, defaultVertical }: SlideProps) {
 
           {slide.subtitle && (
             <p
-              className={`font-body text-lg leading-relaxed sm:text-xl ${subtitleClass}`}
+              className={`font-body text-body-lg ${subtitleClass}`}
               style={{ maxWidth: "36rem" }}
             >
               {slide.subtitle}
@@ -184,7 +184,7 @@ function Slide({ slide, defaultAlignment, defaultVertical }: SlideProps) {
                       ? "noopener noreferrer"
                       : undefined
                   }
-                  className="inline-flex items-center rounded-md bg-accent px-7 py-3.5 text-sm font-semibold tracking-wide text-white transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="inline-flex h-11 items-center rounded-button bg-[var(--color-btn-bg)] px-8 text-label text-[var(--color-btn-text)] transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   {slide.button1Label}
                 </a>
@@ -201,7 +201,7 @@ function Slide({ slide, defaultAlignment, defaultVertical }: SlideProps) {
                       ? "noopener noreferrer"
                       : undefined
                   }
-                  className="inline-flex items-center rounded-md border-2 border-white/75 px-7 py-3.5 text-sm font-semibold tracking-wide text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="inline-flex h-11 items-center rounded-button border border-current bg-transparent px-8 text-label text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   {slide.button2Label}
                 </a>
@@ -224,7 +224,7 @@ interface LinkBarProps {
 function LinkBar({ items, bgColour }: LinkBarProps) {
   return (
     <div
-      className="border-t border-neutral-200 bg-neutral-100 font-body"
+      className="border-t border-[var(--color-border)] bg-[var(--color-ticker-bg)] font-body"
       style={bgColour ? { backgroundColor: bgColour } : undefined}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -249,13 +249,13 @@ function LinkBar({ items, bgColour }: LinkBarProps) {
                 )}
                 <div className="min-w-0">
                   {item.title && (
-                    <p className="truncate text-sm font-semibold text-neutral-800">
+                    <p className="truncate text-label text-[var(--color-text-primary)]">
                       {item.title}
                     </p>
                   )}
                   {item.subtitle && (
                     <p
-                      className="truncate text-xs text-neutral-500"
+                      className="truncate text-body-sm text-[var(--color-text-secondary)]"
                       style={{ marginTop: "2px" }}
                     >
                       {item.subtitle}

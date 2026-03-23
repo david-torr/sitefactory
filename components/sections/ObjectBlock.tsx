@@ -145,13 +145,10 @@ function ObjectItemCard({ item, blockTheme, centered = false }: ObjectItemCardPr
 
   return (
     <article
-      className={`flex h-full flex-col gap-4 rounded-xl p-6 font-body ${alignClass} ${
-        isDark ? "bg-neutral-800" : "bg-background border border-neutral-200"
+      className={`flex h-full flex-col gap-4 p-8 font-body ${alignClass} ${
+        isDark ? "rounded-xl bg-[var(--color-card-bg-dark)]" : "rounded-card border border-[var(--color-border)] bg-background"
       }`}
-      style={{
-        ...(item.backgroundColour ? { backgroundColor: item.backgroundColour } : {}),
-        ...(isDark ? {} : { boxShadow: "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)" }),
-      }}
+      style={item.backgroundColour ? { backgroundColor: item.backgroundColour } : undefined}
     >
       {/* Icon */}
       {item.icon?.url && (
@@ -169,14 +166,14 @@ function ObjectItemCard({ item, blockTheme, centered = false }: ObjectItemCardPr
 
       {/* Title */}
       {item.title && (
-        <h3 className={`font-display text-lg font-semibold leading-snug ${titleClass}`}>
+        <h3 className={`font-display text-h3 ${titleClass}`}>
           {item.title}
         </h3>
       )}
 
       {/* Blurb */}
       {item.blurb && (
-        <p className={`flex-1 text-sm leading-relaxed ${bodyClass}`}>{item.blurb}</p>
+        <p className={`flex-1 text-body-sm text-[var(--color-text-secondary)]`}>{item.blurb}</p>
       )}
 
       {/* Buttons */}
@@ -426,13 +423,13 @@ function SectionHeader({ title, subtitle, alignment, isDark, link }: SectionHead
     >
       {title && (
         <h2
-          className={`font-display text-3xl font-bold leading-tight tracking-tight ${titleClass}`}
+          className={`font-display text-h2 tracking-tight ${titleClass}`}
         >
           {title}
         </h2>
       )}
       {subtitle && (
-        <p className={`mt-3 text-lg leading-relaxed ${bodyClass}`}>{subtitle}</p>
+        <p className={`mt-3 text-body-lg ${bodyClass}`}>{subtitle}</p>
       )}
       {link?.url && link?.label && (
         <div
@@ -537,7 +534,7 @@ export default function ObjectBlock({
         </>
       )}
 
-      <div className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+      <div className="relative px-6 py-space-16 lg:px-space-20">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             title={title}
