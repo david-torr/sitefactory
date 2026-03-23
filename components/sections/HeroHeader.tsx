@@ -36,6 +36,8 @@ export interface HeroHeaderProps {
   linkBarBgColour?: string;
   heroItems?: HeroSlide[];
   linkBarItems?: LinkBarItem[];
+  /** Page-builder carousel speed string — mapped to ms internally */
+  carouselSpeedMode?: "on_click" | "slow" | "fast";
 }
 
 // ─── Alignment maps ───────────────────────────────────────────────────────────
@@ -271,8 +273,15 @@ function LinkBar({ items, bgColour }: LinkBarProps) {
 
 // ─── HeroHeader ───────────────────────────────────────────────────────────────
 
+const speedMap: Record<string, number> = {
+  on_click: 0,
+  slow: 6000,
+  fast: 3000,
+};
+
 export default function HeroHeader({
   carouselSpeed = 5000,
+  carouselSpeedMode,
   contentAlignment = "left",
   verticalAlignment = "middle",
   linkBarVisible = false,
@@ -280,6 +289,7 @@ export default function HeroHeader({
   heroItems,
   linkBarItems,
 }: HeroHeaderProps) {
+  const resolvedSpeed = carouselSpeedMode != null ? speedMap[carouselSpeedMode] ?? carouselSpeed : carouselSpeed;
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const slideCount = heroItems?.length ?? 0;
@@ -293,10 +303,10 @@ export default function HeroHeader({
   }, [slideCount]);
 
   useEffect(() => {
-    if (slideCount <= 1 || carouselSpeed === 0 || paused) return;
-    const timer = setInterval(next, carouselSpeed);
+    if (slideCount <= 1 || resolvedSpeed === 0 || paused) return;
+    const timer = setInterval(next, resolvedSpeed);
     return () => clearInterval(timer);
-  }, [next, slideCount, carouselSpeed, paused]);
+  }, [next, slideCount, resolvedSpeed, paused]);
 
   if (!heroItems || heroItems.length === 0) {
     return <HeroHeaderSkeleton />;
