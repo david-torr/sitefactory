@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "visual-testing": {
+      "source": "serkan-ozal/browser-devtools-skills",
+      "sourceType": "github",
+      "skillPath": "skills/visual-testing/SKILL.md",
+      "computedHash": "0a72dd8f4b4bd0efb5ff146e710efd4038fee2547cbf1956ba4b49eac69532b6"
+    }
+  }
+}
